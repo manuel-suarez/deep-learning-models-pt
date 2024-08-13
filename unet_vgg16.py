@@ -1,25 +1,9 @@
-import torch.nn as nn
-from encoders.vgg.vgg16 import Vgg16Encoder
-from decoders.unet import UnetDecoder
-from segmentation.segmentationhead import SegmentationHead
+from unet import Unet
 
 
-class UnetVgg16(nn.Module):
+class UnetVgg16(Unet):
     def __init__(self, *args, **kwargs) -> None:
-        super().__init__(*args, **kwargs)
-        ## Encoder
-        self.encoder = Vgg16Encoder()
-        ## Decoder
-        self.decoder = UnetDecoder(inputs=[1024, 768, 384, 192, 32], has_center=True)
-        ## Segmentation Head
-        self.segmentation_head = SegmentationHead()
-
-    def forward(self, inputs):
-        c1, c2, c3, c4, c5 = self.encoder(inputs)
-        d1 = self.decoder(c5, [c1, c2, c3, c4])
-        outputs = self.segmentation_head(d1)
-
-        return outputs
+        super().__init__("vgg16", *args, **kwargs)
 
 
 if __name__ == "__main__":
