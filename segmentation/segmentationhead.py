@@ -3,14 +3,17 @@ from .common import Activation
 
 
 class SegmentationHead(nn.Module):
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, has_activation=True, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.conv = nn.Conv2d(
             16, 1, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
         )
-        self.act = Activation()
+        self.has_activation = has_activation
+        if self.has_activation:
+            self.act = Activation()
 
     def forward(self, x):
         x = self.conv(x)
-        x = self.act(x)
+        if self.has_activation:
+            x = self.act(x)
         return x
