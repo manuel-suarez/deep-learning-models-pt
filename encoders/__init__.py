@@ -35,6 +35,8 @@ linknet_decoder_params = {
     },
 }
 
+fpn_decoder_params = {"vgg11": {}}
+
 
 def get_encoder(name):
     try:
@@ -57,8 +59,16 @@ def get_linknet_decoder_params(name):
         raise EncoderException(encoder_name=name)
 
 
+def get_fpn_decoder_params(name):
+    try:
+        return fpn_decoder_params[name]
+    except KeyError:
+        raise EncoderException(encoder_name=name)
+
+
 __all__ = [
     get_encoder,
     get_unet_decoder_params,
     get_linknet_decoder_params,
+    get_fpn_decoder_params,
 ]
