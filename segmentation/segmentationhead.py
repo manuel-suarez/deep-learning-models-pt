@@ -3,10 +3,10 @@ from .common import Activation
 
 
 class SegmentationHead(nn.Module):
-    def __init__(self, has_activation=True, *args, **kwargs) -> None:
+    def __init__(self, kernels_in=16, has_activation=True, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.conv = nn.Conv2d(
-            16, 1, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+            kernels_in, 1, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
         )
         self.has_activation = has_activation
         if self.has_activation:
