@@ -22,6 +22,19 @@ unet_decoder_params = {
     "vgg19": {"inputs": [1024, 768, 384, 192, 32], "has_center": True},
 }
 
+linknet_decoder_params = {
+    "vgg11": {
+        "inputs": [512, 512, 512, 256, 128],
+        "mids": [128, 128, 128, 64, 32],
+        "outputs": [512, 512, 256, 128, 32],
+    },
+    "vgg16": {
+        "inputs": [512, 512, 512, 256, 128],
+        "mids": [128, 128, 128, 64, 32],
+        "outputs": [512, 512, 256, 128, 32],
+    },
+}
+
 
 def get_encoder(name):
     try:
@@ -37,11 +50,15 @@ def get_unet_decoder_params(name):
         raise EncoderException(encoder_name=name)
 
 
+def get_linknet_decoder_params(name):
+    try:
+        return linknet_decoder_params[name]
+    except KeyError:
+        raise EncoderException(encoder_name=name)
+
+
 __all__ = [
     get_encoder,
     get_unet_decoder_params,
-    vgg11_encoder,
-    vgg13_encoder,
-    vgg16_encoder,
-    vgg19_encoder,
+    get_linknet_decoder_params,
 ]
