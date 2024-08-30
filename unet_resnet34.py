@@ -5,10 +5,10 @@ from .segmentation.segmentationhead import SegmentationHead
 
 
 class UnetResNet34(nn.Module):
-    def __init__(self, *args, **kwargs) -> None:
-        super().__init__(*args, **kwargs)
+    def __init__(self, in_channels=3) -> None:
+        super().__init__()
         ## Encoder
-        self.encoder = ResNetEncoder()
+        self.encoder = ResNetEncoder(in_channels=in_channels)
         ## Decoder
         self.decoder = UnetDecoder(inputs=[768, 384, 192, 128, 32])
         ## Segmentation Head
