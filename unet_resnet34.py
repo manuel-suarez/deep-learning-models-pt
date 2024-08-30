@@ -12,7 +12,7 @@ class UnetResNet34(nn.Module):
         ## Decoder
         self.decoder = UnetDecoder(inputs=[768, 384, 192, 128, 32])
         ## Segmentation Head
-        self.segmentation_head = SegmentationHead()
+        self.segmentation_head = SegmentationHead(has_activation=False)
 
     def forward(self, inputs):
         c1, c2, c3, c4, c5 = self.encoder(inputs)
