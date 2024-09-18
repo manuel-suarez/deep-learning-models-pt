@@ -3,11 +3,16 @@ from .common import SEBottleneck
 
 
 class SENetEncoder(nn.Module):
-    def __init__(self, *args, **kwargs) -> None:
-        super().__init__(*args, **kwargs)
+    def __init__(self, in_channels=3) -> None:
+        super().__init__()
         self.encoder_block1 = nn.Sequential(
             nn.Conv2d(
-                3, 64, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False
+                in_channels,
+                64,
+                kernel_size=(3, 3),
+                stride=(2, 2),
+                padding=(1, 1),
+                bias=False,
             ),
             nn.BatchNorm2d(
                 64, eps=1e-5, momentum=0.1, affine=True, track_running_stats=True

@@ -5,14 +5,16 @@ from segmentation.segmentationhead import SegmentationHead
 
 
 class UnetEfficientNetB0(nn.Module):
-    def __init__(self, *args, **kwargs) -> None:
-        super().__init__(*args, **kwargs)
+    def __init__(self, in_channels=3, out_channels=1) -> None:
+        super().__init__()
         ## Encoder
-        self.encoder = EfficientNetEncoder()
+        self.encoder = EfficientNetEncoder(in_channels=in_channels)
         ## Decoder
         self.decoder = UnetDecoder(inputs=[432, 296, 152, 96, 32])
         ## Segmentation
-        self.segmentation = SegmentationHead()
+        self.segmentation = SegmentationHead(
+            out_channels=out_channels, has_activation=False
+        )
 
     def forward(self, inputs):
         c1, c2, c3, c4, c5 = self.encoder(inputs)

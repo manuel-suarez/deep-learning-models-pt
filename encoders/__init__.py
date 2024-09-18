@@ -38,9 +38,9 @@ linknet_decoder_params = {
 fpn_decoder_params = {"vgg11": {}}
 
 
-def get_encoder(name):
+def get_encoder(name, in_channels=3):
     try:
-        return encoders[name]()
+        return encoders[name](in_channels=in_channels)
     except KeyError:
         raise EncoderException(encoder_name=name)
 

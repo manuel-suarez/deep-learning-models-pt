@@ -2,8 +2,8 @@ from unet import Unet
 
 
 class UnetVgg11(Unet):
-    def __init__(self, *args, **kwargs) -> None:
-        super().__init__("vgg11", *args, **kwargs)
+    def __init__(self, in_channels=3, out_channels=1) -> None:
+        super().__init__("vgg11", in_channels=in_channels, out_channels=out_channels)
 
 
 if __name__ == "__main__":

@@ -5,14 +5,18 @@ from segmentation.segmentationhead import SegmentationHead
 
 
 class Unet(nn.Module):
-    def __init__(self, encoder_name, activation=False) -> None:
+    def __init__(
+        self, encoder_name, in_channels=3, out_channels=1, activation=False
+    ) -> None:
         super().__init__()
         ## Encoder
-        self.encoder = get_encoder(encoder_name)
+        self.encoder = get_encoder(encoder_name, in_channels=in_channels)
         ## Decoder
         self.decoder = UnetDecoder(**get_unet_decoder_params(encoder_name))
         ## Segmentation
-        self.segmentation = SegmentationHead(activation)
+        self.segmentation = SegmentationHead(
+            out_channels=out_channels, activation=activation
+        )
 
     def forward(self, inputs):
         c1, c2, c3, c4, c5 = self.encoder(inputs)

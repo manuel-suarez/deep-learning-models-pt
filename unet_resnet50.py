@@ -5,14 +5,16 @@ from segmentation.segmentationhead import SegmentationHead
 
 
 class UnetResNet50(nn.Module):
-    def __init__(self, *args, **kwargs) -> None:
-        super().__init__(*args, **kwargs)
+    def __init__(self, in_channels=3, out_channels=1) -> None:
+        super().__init__()
         ## Encoder
-        self.encoder = ResNetEncoder()
+        self.encoder = ResNetEncoder(in_channels=in_channels)
         ## Decoder
         self.decoder = UnetDecoder()
         ## Segmentation Head
-        self.segmentation_head = SegmentationHead()
+        self.segmentation_head = SegmentationHead(
+            out_channels=out_channels, has_activation=False
+        )
 
     def forward(self, inputs):
         c1, c2, c3, c4, c5 = self.encoder(inputs)
