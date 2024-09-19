@@ -1,4 +1,4 @@
-from unet import Unet
+from models.unet import Unet
 
 
 class UnetVgg16(Unet):

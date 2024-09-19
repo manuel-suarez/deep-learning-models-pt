@@ -1,7 +1,7 @@
 import torch.nn as nn
-from encoders.resnet.resnet18 import ResNetEncoder
-from decoders.unet import UnetDecoder
-from segmentation.segmentationhead import SegmentationHead
+from models.encoders.resnet.resnet18 import ResNetEncoder
+from models.decoders.unet import UnetDecoder
+from models.segmentation.segmentationhead import SegmentationHead
 
 
 class UnetResNet18(nn.Module):

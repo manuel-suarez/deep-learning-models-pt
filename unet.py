@@ -1,7 +1,7 @@
 import torch.nn as nn
-from encoders import get_encoder, get_unet_decoder_params
-from decoders.unet import UnetDecoder
-from segmentation.segmentationhead import SegmentationHead
+from models.encoders import get_encoder, get_unet_decoder_params
+from models.decoders.unet import UnetDecoder
+from models.segmentation.segmentationhead import SegmentationHead
 
 
 class Unet(nn.Module):
@@ -15,7 +15,7 @@ class Unet(nn.Module):
         self.decoder = UnetDecoder(**get_unet_decoder_params(encoder_name))
         ## Segmentation
         self.segmentation = SegmentationHead(
-            out_channels=out_channels, activation=activation
+            out_channels=out_channels, has_activation=activation
         )
 
     def forward(self, inputs):

@@ -1,7 +1,7 @@
 import torch.nn as nn
-from encoders.senet.senet154 import SENetEncoder
-from decoders.unet import UnetDecoder
-from segmentation.segmentationhead import SegmentationHead
+from .encoders.senet.senet154 import SENetEncoder
+from .decoders.unet import UnetDecoder
+from .segmentation.segmentationhead import SegmentationHead
 
 
 class UnetSENet154(nn.Module):

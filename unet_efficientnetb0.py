@@ -1,7 +1,7 @@
 import torch.nn as nn
-from encoders.efficientnet.efficientnetb0 import EfficientNetEncoder
-from decoders.unet import UnetDecoder
-from segmentation.segmentationhead import SegmentationHead
+from .encoders.efficientnet.efficientnetb0 import EfficientNetEncoder
+from .decoders.unet import UnetDecoder
+from .segmentation.segmentationhead import SegmentationHead
 
 
 class UnetEfficientNetB0(nn.Module):
