@@ -2,39 +2,37 @@ import torch, torch.nn as nn
 
 
 class MBConvBlock(nn.Module):
-    def __init__(
-        self, kernels_inputs, kernels_outputs, stride=1, residual=False, *args, **kwargs
-    ) -> None:
+    def __init__(self, kernels, stride=1, residual=True, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.conv2d1 = nn.Conv2d(
-            kernels_inputs[0],
-            kernels_outputs[0],
+            kernels[0],
+            kernels[0] if kernels[1] == 0 else kernels[1],
             kernel_size=(3, 3),
             stride=(1, 1),
             padding="same",
             bias=False,
         )
         self.bn1 = nn.BatchNorm2d(
-            kernels_outputs[0],
+            kernels[0] if kernels[1] == 0 else kernels[1],
             eps=1e-3,
             momentum=0.01,
             affine=True,
             track_running_stats=True,
         )
         self.act1 = nn.SiLU(inplace=True)
-        self.has_block1a = kernels_inputs[1] != 0
-        if kernels_inputs[1] != 0:
+        self.has_block1a = kernels[1] != 0
+        if kernels[1] != 0:
             padding = "same" if stride == 1 else (1, 1)
             self.conv2d1a = nn.Conv2d(
-                kernels_inputs[1],
-                kernels_outputs[1],
+                kernels[1],
+                kernels[2],
                 kernel_size=(3, 3),
                 stride=(stride, stride),
                 padding=padding,
                 bias=False,
             )
             self.bn1a = nn.BatchNorm2d(
-                kernels_outputs[1],
+                kernels[2],
                 eps=1e-3,
                 momentum=0.01,
                 affine=True,
@@ -42,8 +40,8 @@ class MBConvBlock(nn.Module):
             )
             self.act1a = nn.SiLU(inplace=True)
         self.conv2d2 = nn.Conv2d(
-            kernels_inputs[2],
-            kernels_outputs[2],
+            kernels[2],
+            kernels[3],
             kernel_size=(3, 3),
             stride=(1, 1),
             padding="same",
@@ -51,8 +49,8 @@ class MBConvBlock(nn.Module):
         )
         self.act2 = nn.SiLU(inplace=True)
         self.conv2d3 = nn.Conv2d(
-            kernels_inputs[3],
-            kernels_outputs[3],
+            kernels[3],
+            kernels[4],
             kernel_size=(3, 3),
             stride=(1, 1),
             padding="same",
@@ -60,15 +58,15 @@ class MBConvBlock(nn.Module):
         )
         self.act3 = nn.Sigmoid()
         self.conv2d4 = nn.Conv2d(
-            kernels_inputs[4],
-            kernels_outputs[4],
+            kernels[4],
+            kernels[5],
             kernel_size=(3, 3),
             stride=(1, 1),
             padding="same",
             bias=False,
         )
         self.bn4 = nn.BatchNorm2d(
-            kernels_outputs[4],
+            kernels[5],
             eps=1e-3,
             momentum=0.01,
             affine=True,
