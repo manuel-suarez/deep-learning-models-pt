@@ -1,14 +1,15 @@
-from models.unet_vgg11 import UnetVgg11
-from models.unet_vgg13 import UnetVgg13
-from models.unet_vgg16 import UnetVgg16
-from models.unet_vgg19 import UnetVgg19
-from models.unet_resnet18 import UnetResNet18
-from models.unet_resnet34 import UnetResNet34
-from models.unet_resnet50 import UnetResNet50
-from models.unet_resnet101 import UnetResNet101
-from models.unet_resnet152 import UnetResNet152
-from models.unet_senet154 import UnetSENet154
-from models.unet_efficientnetb0 import UnetEfficientNetB0
+from .unet_vgg11 import UnetVgg11
+from .unet_vgg13 import UnetVgg13
+from .unet_vgg16 import UnetVgg16
+from .unet_vgg19 import UnetVgg19
+from .unet_resnet18 import UnetResNet18
+from .unet_resnet34 import UnetResNet34
+from .unet_resnet50 import UnetResNet50
+from .unet_resnet101 import UnetResNet101
+from .unet_resnet152 import UnetResNet152
+from .unet_senet154 import UnetSENet154
+from .unet_efficientnetb0 import UnetEfficientNetB0
+from .unet_efficientnetb1 import UnetEfficientNetB1
 
 
 def get_model(arch, args, encoder=None):
@@ -35,3 +36,5 @@ def get_model(arch, args, encoder=None):
             return UnetSENet154(**args)
         if encoder == "efficientnetb0":
             return UnetEfficientNetB0(**args)
+        if encoder == "efficientnetb1":
+            return UnetEfficientNetB1(**args)
