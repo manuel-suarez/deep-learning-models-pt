@@ -10,6 +10,8 @@ from .unet_resnet152 import UnetResNet152
 from .unet_senet154 import UnetSENet154
 from .unet_efficientnetb0 import UnetEfficientNetB0
 from .unet_efficientnetb1 import UnetEfficientNetB1
+from .unet_efficientnetb2 import UnetEfficientNetB2
+from .unet_efficientnetb3 import UnetEfficientNetB3
 
 
 def get_model(arch, args, encoder=None):
@@ -38,3 +40,7 @@ def get_model(arch, args, encoder=None):
             return UnetEfficientNetB0(**args)
         if encoder == "efficientnetb1":
             return UnetEfficientNetB1(**args)
+        if encoder == "efficientnetb2":
+            return UnetEfficientNetB2(**args)
+        if encoder == "efficientnetb3":
+            return UnetEfficientNetB3(**args)

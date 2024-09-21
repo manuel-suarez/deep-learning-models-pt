@@ -1,16 +1,16 @@
 import torch.nn as nn
-from .encoders.efficientnet.efficientnetb2 import EfficientNetEncoder
+from .encoders.efficientnet.efficientnetb3 import EfficientNetEncoder
 from .decoders.unet import UnetDecoder
 from .segmentation.segmentationhead import SegmentationHead
 
 
-class UnetEfficientNetB2(nn.Module):
+class UnetEfficientNetB3(nn.Module):
     def __init__(self, in_channels=3, out_channels=1) -> None:
         super().__init__()
         ## Encoder
         self.encoder = EfficientNetEncoder(in_channels=in_channels)
         ## Decoder
-        self.decoder = UnetDecoder(inputs=[472, 304, 152, 96, 32])
+        self.decoder = UnetDecoder(inputs=[520, 304, 160, 104, 32])
         ## Segmentation
         self.segmentation = SegmentationHead(
             out_channels=out_channels, has_activation=False
@@ -27,7 +27,7 @@ class UnetEfficientNetB2(nn.Module):
 if __name__ == "__main__":
     from torchview import draw_graph
 
-    model = UnetEfficientNetB1()
+    model = UnetEfficientNetB3()
     print(model)
     draw_graph(
         model,
@@ -36,6 +36,6 @@ if __name__ == "__main__":
         show_shapes=True,
         expand_nested=True,
         save_graph=True,
-        filename="unet+efficientnetb0",
+        filename="unet+efficientnetb3",
         directory="figures",
     )
