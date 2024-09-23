@@ -1,108 +1,69 @@
 import torch.nn as nn
-from .common import MBConvBlock
+from .common import InitBlock, MBConvBlock, repeat_mbconvblock
 
 
 class EfficientNetEncoder(nn.Module):
     def __init__(self, in_channels=3) -> None:
         super().__init__()
-        self.encoder_block1 = nn.Sequential(
-            nn.Conv2d(
-                in_channels,
-                32,
-                kernel_size=(3, 3),
-                stride=(2, 2),
-                padding=(1, 1),
-                bias=False,
-            ),
-            nn.BatchNorm2d(
-                32, eps=1e-3, momentum=0.01, affine=True, track_running_stats=True
-            ),
-            nn.SiLU(inplace=True),
-        )
+        self.encoder_block1 = InitBlock(in_channels=in_channels, out_channels=32)
         self.encoder_block2 = nn.Sequential(
             MBConvBlock(
-                kernels=[32, 0, 32, 8, 32, 16],
+                kernels=[32, 8, 16],
                 stride=1,
                 residual=False,
             ),
             MBConvBlock(
-                kernels=[16, 96, 96, 4, 96, 24],
+                kernels=[16, 96, 4, 24],
                 stride=2,
                 residual=False,
             ),
             MBConvBlock(
-                kernels=[24, 144, 144, 6, 144, 24],
+                kernels=[24, 144, 6, 24],
                 stride=1,
                 residual=True,
             ),
         )
         self.encoder_block3 = nn.Sequential(
             MBConvBlock(
-                kernels=[24, 144, 144, 6, 144, 40],
+                kernels=[24, 144, 6, 40],
                 stride=2,
                 residual=False,
             ),
             MBConvBlock(
-                kernels=[40, 240, 240, 10, 240, 40],
+                kernels=[40, 240, 10, 40],
                 stride=1,
                 residual=True,
             ),
         )
         self.encoder_block4 = nn.Sequential(
             MBConvBlock(
-                kernels=[40, 240, 240, 10, 240, 80],
+                kernels=[40, 240, 10, 80],
                 stride=2,
                 residual=False,
             ),
-            MBConvBlock(
-                kernels=[80, 480, 480, 20, 480, 80],
-                stride=1,
-                residual=True,
+            *repeat_mbconvblock(
+                kernels=[80, 480, 20, 80], stride=1, residual=True, blocks=2
             ),
             MBConvBlock(
-                kernels=[80, 480, 480, 20, 480, 80],
-                stride=1,
-                residual=True,
-            ),
-            MBConvBlock(
-                kernels=[80, 480, 480, 20, 480, 112],
+                kernels=[80, 480, 20, 112],
                 stride=1,
                 residual=False,
             ),
         )
         self.encoder_block5 = nn.Sequential(
-            MBConvBlock(
-                kernels=[112, 672, 672, 28, 672, 112],
-                stride=1,
-                residual=True,
+            *repeat_mbconvblock(
+                kernels=[112, 672, 28, 112], stride=1, residual=True, blocks=2
             ),
             MBConvBlock(
-                kernels=[112, 672, 672, 28, 672, 112],
-                stride=1,
-                residual=True,
-            ),
-            MBConvBlock(
-                kernels=[112, 672, 672, 28, 672, 192],
+                kernels=[112, 672, 28, 192],
                 stride=2,
                 residual=False,
             ),
-            MBConvBlock(
-                kernels=[192, 1152, 1152, 48, 1152, 192],
-                stride=1,
-                residual=True,
+            *repeat_mbconvblock(
+                kernels=[192, 1152, 48, 192], stride=1, residual=True, blocks=3
             ),
             MBConvBlock(
-                kernels=[192, 1152, 1152, 48, 1152, 192],
-                stride=1,
-                residual=True,
-            ),
-            MBConvBlock(
-                kernels=[192, 1152, 1152, 48, 1152, 192],
-                stride=1,
-                residual=True,
-            ),
-            MBConvBlock(
-                kernels=[192, 1152, 1152, 48, 1152, 320],
+                kernels=[192, 1152, 48, 320],
                 stride=1,
                 residual=False,
             ),

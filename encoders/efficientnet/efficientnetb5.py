@@ -19,7 +19,6 @@ class EfficientNetEncoder(nn.Module):
             ),
             nn.SiLU(inplace=True),
         )
-        # Estamos empezando el bloque 2
         self.encoder_block2 = nn.Sequential(
             MBConvBlock(
                 kernels=[48, 0, 48, 12, 48, 24],
