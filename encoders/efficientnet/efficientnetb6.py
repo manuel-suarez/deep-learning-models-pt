@@ -8,14 +8,14 @@ class EfficientNetEncoder(nn.Module):
         self.encoder_block1 = nn.Sequential(
             nn.Conv2d(
                 in_channels,
-                48,
+                56,
                 kernel_size=(3, 3),
                 stride=(2, 2),
                 padding=(1, 1),
                 bias=False,
             ),
             nn.BatchNorm2d(
-                48, eps=1e-3, momentum=0.01, affine=True, track_running_stats=True
+                56, eps=1e-3, momentum=0.01, affine=True, track_running_stats=True
             ),
             nn.SiLU(inplace=True),
         )
