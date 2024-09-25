@@ -31,6 +31,12 @@ class InitBlock(nn.Module):
 class MBConvBlock(nn.Module):
     def __init__(self, kernels, stride=1, residual=True, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
+        # Conversion between versions
+        if len(kernels) == 6:
+            if kernels[1] == 0:
+                kernels = [kernels[0], kernels[3], kernels[5]]
+            else:
+                kernels = [kernels[0], kernels[1], kernels[3], kernels[5]]
         self.has_block1a = len(kernels) == 4
         self.conv2d1 = nn.Conv2d(
             kernels[0],
