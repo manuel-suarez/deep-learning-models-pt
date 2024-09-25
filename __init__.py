@@ -15,6 +15,7 @@ from .unet_efficientnetb3 import UnetEfficientNetB3
 from .unet_efficientnetb4 import UnetEfficientNetB4
 from .unet_efficientnetb5 import UnetEfficientNetB5
 from .unet_efficientnetb6 import UnetEfficientNetB6
+from .unet_efficientnetb7 import UnetEfficientNetB7
 
 
 def get_model(arch, args, encoder=None):
@@ -53,3 +54,8 @@ def get_model(arch, args, encoder=None):
             return UnetEfficientNetB5(**args)
         if encoder == "efficientnetb6":
             return UnetEfficientNetB6(**args)
+        if encoder == "efficientnetb7":
+            return UnetEfficientNetB7(**args)
+        raise Exception(
+            f"No se reconoce el encoder {encoder} para la arquitectura unet"
+        )
