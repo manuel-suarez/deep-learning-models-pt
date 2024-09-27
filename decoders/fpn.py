@@ -77,10 +77,17 @@ class MergeBlock(nn.Module):
 
 
 class FPNDecoder(nn.Module):
-    def __init__(self, fpn_inputs, fpn_outputs, *args, **kwargs) -> None:
+    def __init__(
+        self, fpn_inputs, fpn_outputs, in_channels=512, *args, **kwargs
+    ) -> None:
         super().__init__(*args, **kwargs)
         self.conv2d = nn.Conv2d(
-            512, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+            in_channels,
+            256,
+            kernel_size=(3, 3),
+            stride=(1, 1),
+            padding=(1, 1),
+            bias=False,
         )
         self.decoder_block1 = SegmentationBlock(3, 256, 128)
         self.decoder_block2 = SegmentationBlock(2, 256, 128)

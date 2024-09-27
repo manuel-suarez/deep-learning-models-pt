@@ -182,10 +182,29 @@ fpn_decoder_params = {
         "fpn_inputs": [256, 128, 64],
         "fpn_outputs": [256, 256, 256],
     },
-    "resnet34": {},
-    "resnet50": {},
-    "resnet101": {},
-    "resnet152": {},
+    "resnet18": {
+        "fpn_inputs": [256, 128, 64],
+        "fpn_outputs": [256, 256, 256],
+    },
+    "resnet34": {
+        "fpn_inputs": [256, 128, 64],
+        "fpn_outputs": [256, 256, 256],
+    },
+    "resnet50": {
+        "in_channels": 2048,
+        "fpn_inputs": [1024, 512, 256],
+        "fpn_outputs": [256, 256, 256],
+    },
+    "resnet101": {
+        "in_channels": 2048,
+        "fpn_inputs": [1024, 512, 256],
+        "fpn_outputs": [256, 256, 256],
+    },
+    "resnet152": {
+        "in_channels": 2048,
+        "fpn_inputs": [1024, 512, 256],
+        "fpn_outputs": [256, 256, 256],
+    },
 }
 
 
