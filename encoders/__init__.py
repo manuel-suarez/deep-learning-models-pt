@@ -205,6 +205,51 @@ fpn_decoder_params = {
         "fpn_inputs": [1024, 512, 256],
         "fpn_outputs": [256, 256, 256],
     },
+    "senet154": {
+        "in_channels": 2048,
+        "fpn_inputs": [1024, 512, 256],
+        "fpn_outputs": [256, 256, 256],
+    },
+    "efficientnetb0": {
+        "in_channels": 320,
+        "fpn_inputs": [112, 40, 24],
+        "fpn_outputs": [256, 256, 256],
+    },
+    "efficientnetb1": {
+        "in_channels": 320,
+        "fpn_inputs": [112, 40, 24],
+        "fpn_outputs": [256, 256, 256],
+    },
+    "efficientnetb2": {
+        "in_channels": 352,
+        "fpn_inputs": [120, 48, 24],
+        "fpn_outputs": [256, 256, 256],
+    },
+    "efficientnetb3": {
+        "in_channels": 384,
+        "fpn_inputs": [136, 48, 32],
+        "fpn_outputs": [256, 256, 256],
+    },
+    "efficientnetb4": {
+        "in_channels": 448,
+        "fpn_inputs": [160, 56, 32],
+        "fpn_outputs": [256, 256, 256],
+    },
+    "efficientnetb5": {
+        "in_channels": 512,
+        "fpn_inputs": [176, 64, 40],
+        "fpn_outputs": [256, 256, 256],
+    },
+    "efficientnetb6": {
+        "in_channels": 576,
+        "fpn_inputs": [200, 72, 40],
+        "fpn_outputs": [256, 256, 256],
+    },
+    "efficientnetb7": {
+        "in_channels": 640,
+        "fpn_inputs": [224, 80, 48],
+        "fpn_outputs": [256, 256, 256],
+    },
 }
 
 
