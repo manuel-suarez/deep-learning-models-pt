@@ -161,14 +161,38 @@ linknet_decoder_params = {
     },
 }
 
-fpn_decoder_params = {"vgg11": {}}
+fpn_decoder_params = {
+    "vgg11": {
+        "fpn_inputs": [512, 512, 256],
+        "fpn_outputs": [256, 256, 256],
+    },
+    "vgg13": {
+        "fpn_inputs": [512, 512, 256],
+        "fpn_outputs": [256, 256, 256],
+    },
+    "vgg16": {
+        "fpn_inputs": [512, 512, 256],
+        "fpn_outputs": [256, 256, 256],
+    },
+    "vgg19": {
+        "fpn_inputs": [512, 512, 256],
+        "fpn_outputs": [256, 256, 256],
+    },
+    "resnet18": {
+        "fpn_inputs": [256, 128, 64],
+        "fpn_outputs": [256, 256, 256],
+    },
+    "resnet34": {},
+    "resnet50": {},
+    "resnet101": {},
+    "resnet152": {},
+}
 
 
 def get_encoder(name, in_channels=3):
-    try:
-        return encoders[name](in_channels=in_channels)
-    except KeyError:
+    if name not in encoders:
         raise EncoderException(encoder_name=name)
+    return encoders[name](in_channels=in_channels)
 
 
 def get_unet_decoder_params(name):
@@ -186,10 +210,9 @@ def get_linknet_decoder_params(name):
 
 
 def get_fpn_decoder_params(name):
-    try:
-        return fpn_decoder_params[name]
-    except KeyError:
+    if name not in fpn_decoder_params:
         raise EncoderException(encoder_name=name)
+    return fpn_decoder_params[name]
 
 
 __all__ = [

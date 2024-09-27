@@ -77,7 +77,7 @@ class MergeBlock(nn.Module):
 
 
 class FPNDecoder(nn.Module):
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, fpn_inputs, fpn_outputs, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.conv2d = nn.Conv2d(
             512, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
@@ -86,9 +86,9 @@ class FPNDecoder(nn.Module):
         self.decoder_block2 = SegmentationBlock(2, 256, 128)
         self.decoder_block3 = SegmentationBlock(1, 256, 128)
         self.decoder_block4 = SegmentationBlock(1, 256, 128, has_interpolate=False)
-        self.fpn_block1 = FPNBlock(512, 256)
-        self.fpn_block2 = FPNBlock(512, 256)
-        self.fpn_block3 = FPNBlock(256, 256)
+        self.fpn_block1 = FPNBlock(fpn_inputs[0], fpn_outputs[0])
+        self.fpn_block2 = FPNBlock(fpn_inputs[1], fpn_outputs[1])
+        self.fpn_block3 = FPNBlock(fpn_inputs[2], fpn_outputs[2])
         self.merge = MergeBlock(policy="add")
         self.dropout = nn.Dropout2d(p=0.2, inplace=True)
 

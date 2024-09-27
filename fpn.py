@@ -1,7 +1,7 @@
 import torch.nn as nn
-from encoders import get_encoder, get_fpn_decoder_params
-from decoders.fpn import FPNDecoder
-from segmentation.segmentationhead import SegmentationHead
+from .encoders import get_encoder, get_fpn_decoder_params
+from .decoders.fpn import FPNDecoder
+from .segmentation.segmentationhead import SegmentationHead
 
 
 class FPN(nn.Module):
