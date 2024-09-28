@@ -7,6 +7,7 @@ from .resnet import (
     resnet152_encoder,
 )
 from .senet import senet154_encoder
+from .cbam import cbamnet154_encoder
 from .efficientnet import (
     efficientnetb0_encoder,
     efficientnetb1_encoder,
@@ -37,6 +38,7 @@ encoders = {
     "resnet101": resnet101_encoder,
     "resnet152": resnet152_encoder,
     "senet154": senet154_encoder,
+    "cbamnet154": cbamnet154_encoder,
     "efficientnetb0": efficientnetb0_encoder,
     "efficientnetb1": efficientnetb1_encoder,
     "efficientnetb2": efficientnetb2_encoder,
@@ -58,6 +60,7 @@ unet_decoder_params = {
     "resnet101": {},
     "resnet152": {},
     "senet154": {"inputs": [3072, 768, 384, 192, 32]},
+    "cbamnet154": {"inputs": [3072, 768, 384, 192, 32]},
     "efficientnetb0": {"inputs": [432, 296, 152, 96, 32]},
     "efficientnetb1": {"inputs": [432, 296, 152, 96, 32]},
     "efficientnetb2": {"inputs": [472, 304, 152, 96, 32]},
@@ -115,6 +118,11 @@ linknet_decoder_params = {
         "outputs": [1024, 512, 256, 64, 32],
     },
     "senet154": {
+        "inputs": [2048, 1024, 512, 256, 128],
+        "mids": [512, 256, 128, 64, 32],
+        "outputs": [1024, 512, 256, 128, 32],
+    },
+    "cbamnet154": {
         "inputs": [2048, 1024, 512, 256, 128],
         "mids": [512, 256, 128, 64, 32],
         "outputs": [1024, 512, 256, 128, 32],
@@ -210,6 +218,11 @@ fpn_decoder_params = {
         "fpn_inputs": [1024, 512, 256],
         "fpn_outputs": [256, 256, 256],
     },
+    "cbamnet154": {
+        "in_channels": 2048,
+        "fpn_inputs": [1024, 512, 256],
+        "fpn_outputs": [256, 256, 256],
+    },
     "efficientnetb0": {
         "in_channels": 320,
         "fpn_inputs": [112, 40, 24],
@@ -260,10 +273,9 @@ def get_encoder(name, in_channels=3):
 
 
 def get_unet_decoder_params(name):
-    try:
-        return unet_decoder_params[name]
-    except KeyError:
+    if name not in unet_decoder_params:
         raise EncoderException(encoder_name=name)
+    return unet_decoder_params[name]
 
 
 def get_linknet_decoder_params(name):

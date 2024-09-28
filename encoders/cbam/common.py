@@ -5,21 +5,29 @@ import torch.nn.functional as F
 class SpatialAttentionModule(nn.Module):
     def __init__(self, in_channels, out_channels, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
+        kernel_size = 7
         self.conv = nn.Conv2d(
-            in_channels, out_channels, kernel_size=7, stride=1, padding=0, dilation=1
+            2,
+            1,
+            kernel_size=kernel_size,
+            stride=1,
+            padding=(kernel_size - 1) // 2,
+            dilation=1,
+            groups=1,
+            bias=False,
         )
-        self.bn = nn.BatchNorm2d(out_channels, eps=1e-5, momentum=0.01, affine=True)
+        self.bn = nn.BatchNorm2d(1, eps=1e-5, momentum=0.01, affine=True)
         self.relu = nn.ReLU()
 
     def forward(self, x):
         # Spatial channel compression (max and avg over channels)
-        x = torch.cat(
+        x1 = torch.cat(
             (torch.max(x, 1)[0].unsqueeze(1), torch.mean(x, 1).unsqueeze(1)),
             dim=1,
         )
-        x = self.conv(x)
-        x = self.bn(x)
-        scale = F.sigmoid(x)
+        x1 = self.conv(x1)
+        x1 = self.bn(x1)
+        scale = F.sigmoid(x1)
         return x * scale
 
 
@@ -59,7 +67,19 @@ class ChannelAttentionModule(nn.Module):
         return x * scale
 
 
-class SEBottleneck(nn.Module):
+class CBAMModule(nn.Module):
+    def __init__(self, kernels_out, se_size, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+        self.spatial_attmodule = SpatialAttentionModule(2, 1)
+        self.channel_attmodule = ChannelAttentionModule(kernels_out, se_size)
+
+    def forward(self, x):
+        x1 = self.spatial_attmodule(x)
+        x1 = self.channel_attmodule(x1)
+        return x1
+
+
+class CBAMBottleneck(nn.Module):
     def __init__(
         self,
         kernels_in,
@@ -108,8 +128,7 @@ class SEBottleneck(nn.Module):
             kernels_out, eps=1e-5, momentum=0.1, affine=True, track_running_stats=True
         )
         self.relu3 = nn.ReLU(inplace=True)
-        self.spatial_attmodule = SpatialAttentionModule(kernels_out, se_size)
-        self.channel_attmodule = ChannelAttentionModule(kernels_out, se_size)
+        self.cbammodule = CBAMModule(kernels_out, se_size)
         self.has_downsample = has_downsample
         if has_downsample:
             self.downsample = nn.Sequential(
@@ -139,8 +158,7 @@ class SEBottleneck(nn.Module):
         x1 = self.relu2(x1)
         x1 = self.conv2d3(x1)
         x1 = self.bn3(x1)
-        x1 = self.spatial_attmodule(x1)
-        x1 = self.channel_attmodule(x1)
+        x1 = self.cbammodule(x1)
         if self.has_downsample:
             x2 = self.downsample(x)
             x = torch.add(x1, x2)
