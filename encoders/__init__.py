@@ -265,6 +265,28 @@ fpn_decoder_params = {
     },
 }
 
+pspnet_decoder_params = {
+    "vgg11": {},
+    "vgg13": {},
+    "vgg16": {},
+    "vgg19": {},
+    "resnet18": {},
+    "resnet34": {},
+    "resnet50": {},
+    "resnet101": {},
+    "resnet152": {},
+    "senet154": {},
+    "cbamnet154": {},
+    "efficientnetb0": {},
+    "efficientnetb1": {},
+    "efficientnetb2": {},
+    "efficientnetb3": {},
+    "efficientnetb4": {},
+    "efficientnetb5": {},
+    "efficientnetb6": {},
+    "efficientnetb7": {},
+}
+
 
 def get_encoder(name, in_channels=3):
     if name not in encoders:
@@ -291,9 +313,16 @@ def get_fpn_decoder_params(name):
     return fpn_decoder_params[name]
 
 
+def get_pspnet_decoder_params(name):
+    if name not in pspnet_decoder_params:
+        raise EncoderException(encoder_name=name)
+    return pspnet_decoder_params[name]
+
+
 __all__ = [
     get_encoder,
     get_unet_decoder_params,
     get_linknet_decoder_params,
     get_fpn_decoder_params,
+    get_pspnet_decoder_params,
 ]
