@@ -288,10 +288,10 @@ pspnet_decoder_params = {
 }
 
 
-def get_encoder(name, in_channels=3):
+def get_encoder(name, in_channels=3, wavelets_mode=False):
     if name not in encoders:
         raise EncoderException(encoder_name=name)
-    return encoders[name](in_channels=in_channels)
+    return encoders[name](in_channels=in_channels, wavelets_mode=wavelets_mode)
 
 
 def get_unet_decoder_params(name):

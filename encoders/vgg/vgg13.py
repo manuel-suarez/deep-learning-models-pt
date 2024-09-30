@@ -1,83 +1,17 @@
+from .common import EncoderBlock
 import torch.nn as nn
 
 
 class Vgg13Encoder(nn.Module):
     def __init__(self, in_channels=3) -> None:
         super().__init__()
-        self.encoder_block1 = nn.Sequential(
-            nn.Conv2d(
-                in_channels, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1)
-            ),
-            nn.BatchNorm2d(
-                64, eps=1e-5, momentum=0.1, affine=True, track_running_stats=True
-            ),
-            nn.ReLU(inplace=True),
-            nn.Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1)),
-            nn.BatchNorm2d(
-                64, eps=1e-5, momentum=0.1, affine=True, track_running_stats=True
-            ),
-            nn.ReLU(inplace=True),
+        self.encoder_block1 = EncoderBlock(
+            in_channels, 64, num_blocks=1, pool_block=False
         )
-        self.encoder_block2 = nn.Sequential(
-            nn.MaxPool2d(
-                kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False
-            ),
-            nn.Conv2d(64, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1)),
-            nn.BatchNorm2d(
-                128, eps=1e-5, momentum=0.1, affine=True, track_running_stats=True
-            ),
-            nn.ReLU(inplace=True),
-            nn.Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1)),
-            nn.BatchNorm2d(
-                128, eps=1e-5, momentum=0.1, affine=True, track_running_stats=True
-            ),
-            nn.ReLU(inplace=True),
-        )
-        self.encoder_block3 = nn.Sequential(
-            nn.MaxPool2d(
-                kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False
-            ),
-            nn.Conv2d(128, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1)),
-            nn.BatchNorm2d(
-                256, eps=1e-5, momentum=0.1, affine=True, track_running_stats=True
-            ),
-            nn.ReLU(inplace=True),
-            nn.Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1)),
-            nn.BatchNorm2d(
-                256, eps=1e-5, momentum=0.1, affine=True, track_running_stats=True
-            ),
-            nn.ReLU(inplace=True),
-        )
-        self.encoder_block4 = nn.Sequential(
-            nn.MaxPool2d(
-                kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False
-            ),
-            nn.Conv2d(256, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1)),
-            nn.BatchNorm2d(
-                512, eps=1e-5, momentum=0.1, affine=True, track_running_stats=True
-            ),
-            nn.ReLU(inplace=True),
-            nn.Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1)),
-            nn.BatchNorm2d(
-                512, eps=1e-5, momentum=0.1, affine=True, track_running_stats=True
-            ),
-            nn.ReLU(inplace=True),
-        )
-        self.encoder_block5 = nn.Sequential(
-            nn.MaxPool2d(
-                kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False
-            ),
-            nn.Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1)),
-            nn.BatchNorm2d(
-                512, eps=1e-5, momentum=0.1, affine=True, track_running_stats=True
-            ),
-            nn.ReLU(inplace=True),
-            nn.Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1)),
-            nn.BatchNorm2d(
-                512, eps=1e-5, momentum=0.1, affine=True, track_running_stats=True
-            ),
-            nn.ReLU(inplace=True),
-        )
+        self.encoder_block2 = EncoderBlock(64, 128)
+        self.encoder_block3 = EncoderBlock(128, 256)
+        self.encoder_block4 = EncoderBlock(256, 512)
+        self.encoder_block5 = EncoderBlock(512, 512)
         self.encoder_block6 = nn.Sequential(
             nn.MaxPool2d(
                 kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False
