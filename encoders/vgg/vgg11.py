@@ -1,9 +1,10 @@
+from models.encoders.base import BaseEncoder
 from .common import EncoderBlock
 import torch
 import torch.nn as nn
 
 
-class Vgg11Encoder(nn.Module):
+class Vgg11Encoder(BaseEncoder):
     def __init__(self, in_channels=3, wavelets_mode=False) -> None:
         super().__init__()
         self.wavelets_mode = wavelets_mode
