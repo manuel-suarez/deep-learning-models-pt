@@ -1,10 +1,11 @@
+from models.encoders.base import BaseEncoder
 import torch.nn as nn
 from .common import BasicBlock
 
 
-class ResNetEncoder(nn.Module):
-    def __init__(self, in_channels=3) -> None:
-        super().__init__()
+class ResNetEncoder(BaseEncoder):
+    def __init__(self, in_channels=3, *args, **kwargs) -> None:
+        super().__init__(args, kwargs)
         self.encoder_block1 = nn.Sequential(
             nn.Conv2d(
                 in_channels,
@@ -40,11 +41,3 @@ class ResNetEncoder(nn.Module):
             BasicBlock(256, 512, has_downsample=True, stride=2),
             BasicBlock(512, 512, has_downsample=False, stride=1),
         )
-
-    def forward(self, x):
-        c1 = self.encoder_block1(x)
-        c2 = self.encoder_block2(c1)
-        c3 = self.encoder_block3(c2)
-        c4 = self.encoder_block4(c3)
-        c5 = self.encoder_block5(c4)
-        return c1, c2, c3, c4, c5

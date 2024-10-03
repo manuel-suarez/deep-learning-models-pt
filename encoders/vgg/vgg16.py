@@ -1,8 +1,9 @@
+from models.encoders.base import BaseEncoder
 from .common import EncoderBlock
 import torch.nn as nn
 
 
-class Vgg16Encoder(nn.Module):
+class Vgg16Encoder(BaseEncoder):
     def __init__(self, in_channels=3) -> None:
         super().__init__()
         self.encoder_block1 = EncoderBlock(in_channels, 64, pool_block=False)
@@ -15,12 +16,3 @@ class Vgg16Encoder(nn.Module):
                 kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False
             )
         )
-
-    def forward(self, x):
-        x = self.encoder_block1(x)
-        c1 = self.encoder_block2(x)
-        c2 = self.encoder_block3(c1)
-        c3 = self.encoder_block4(c2)
-        c4 = self.encoder_block5(c3)
-        c5 = self.encoder_block6(c4)
-        return c1, c2, c3, c4, c5
