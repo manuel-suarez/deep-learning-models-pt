@@ -1,4 +1,4 @@
-from models.encoder.base import BaseEncoder
+from models.encoders.base import BaseEncoder
 
 
 class EfficientNetBaseEncoder(BaseEncoder):
