@@ -1,9 +1,9 @@
-from models.encoders.base import BaseEncoder
+from .base import VggBaseEncoder
 from .common import EncoderBlock
 import torch.nn as nn
 
 
-class Vgg13Encoder(BaseEncoder):
+class Vgg13Encoder(VggBaseEncoder):
     def __init__(self, in_channels=3, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.encoder_block1 = EncoderBlock(

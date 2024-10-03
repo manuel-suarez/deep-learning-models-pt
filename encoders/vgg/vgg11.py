@@ -1,12 +1,12 @@
-from models.encoders.base import BaseEncoder
+from .base import VggBaseEncoder
 from .common import EncoderBlock
 import torch
 import torch.nn as nn
 
 
-class Vgg11Encoder(BaseEncoder):
-    def __init__(self, in_channels=3, wavelets_mode=False) -> None:
-        super().__init__()
+class Vgg11Encoder(VggBaseEncoder):
+    def __init__(self, in_channels=3, wavelets_mode=False, *args, **kwargs) -> None:
+        super().__init__(in_channels, wavelets_mode, *args, **kwargs)
         self.wavelets_mode = wavelets_mode
         self.encoder_block1 = EncoderBlock(
             in_channels, 64, num_blocks=1, pool_block=False
