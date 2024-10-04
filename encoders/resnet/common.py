@@ -165,3 +165,115 @@ class Bottleneck(nn.Module):
             x = torch.add(x1, x)
         x = self.relu3(x)
         return x
+
+
+def repeat_bsconvblock(
+    in_channels, out_channels, has_downsample, stride, blocks=1, *args, **kwargs
+):
+    return [
+        BasicBlock(
+            in_channels, out_channels, has_downsample=has_downsample, stride=stride
+        )
+        for _ in range(blocks)
+    ]
+
+
+def repeat_btconvblock(
+    in_channels,
+    bt_channels,
+    out_channels,
+    has_downsample,
+    stride,
+    blocks=1,
+    *args,
+    **kwargs
+):
+    return [
+        Bottleneck(
+            in_channels,
+            bt_channels,
+            out_channels,
+            has_downsample=has_downsample,
+            stride=stride,
+            *args,
+            **kwargs,
+        )
+        for _ in range(blocks)
+    ]
+
+
+class ResNetEncoderBasicBlock(nn.Module):
+    def __init__(
+        self, in_channels, out_channels, num_blocks=1, pool_block=False, *args, **kwargs
+    ) -> None:
+        super().__init__(*args, **kwargs)
+        self.pool_block = pool_block
+        if self.pool_block:
+            self.pool = nn.MaxPool2d(
+                kernel_size=3, stride=2, padding=1, dilation=1, ceil_mode=False
+            )
+        self.block = nn.Sequential(
+            BasicBlock(
+                in_channels,
+                out_channels,
+                has_downsample=False if self.pool_block else True,
+                stride=1 if self.pool_block else 2,
+            ),
+            *repeat_bsconvblock(
+                out_channels,
+                out_channels,
+                has_downsample=False,
+                stride=1,
+                num_blocks=num_blocks,
+            ),
+        )
+
+    def forward(self, x, w=None):
+        if self.pool_block:
+            x = self.pool(x)
+        if w is not None:
+            print("x: ", x.shape)
+            print("w: ", w.shape)
+            x = torch.add(x, w)
+        x = self.block(x)
+        return x
+
+
+class ResNetEncoderBottleneckBlock(nn.Module):
+    def __init__(
+        self,
+        in_channels,
+        bt_channels,
+        out_channels,
+        num_blocks=1,
+        pool_block=False,
+        *args,
+        **kwargs
+    ) -> None:
+        super().__init__(*args, **kwargs)
+        self.pool_block = pool_block
+        if self.pool_block:
+            self.pool = nn.MaxPool2d(
+                kernel_size=3, stride=2, padding=1, dilation=1, ceil_mode=False
+            )
+        self.block = nn.Sequential(
+            Bottleneck(
+                in_channels, bt_channels, out_channels, has_downsample=True, stride=2
+            ),
+            *repeat_btconvblock(
+                out_channels,
+                bt_channels,
+                out_channels,
+                has_downsample=False,
+                stride=1,
+                num_blocks=num_blocks,
+            ),
+        )
+
+    def forward(self, x, w=None):
+        if self.pool_block:
+            x = self.pool(x)
+        if w is not None:
+            x = torch.add(x, w)
+        x = self.block(x)
+        return x
