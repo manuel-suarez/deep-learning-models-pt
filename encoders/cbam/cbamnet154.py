@@ -5,7 +5,7 @@ from .common import CBAMBottleneck
 
 class CBAMNetEncoder(CBAMNetBaseEncoder):
     def __init__(self, in_channels=3, *args, **kwargs) -> None:
-        super().__init__(in_channels, args, kwargs)
+        super().__init__(in_channels, *args, **kwargs)
         self.encoder_block1 = nn.Sequential(
             nn.Conv2d(
                 in_channels,
