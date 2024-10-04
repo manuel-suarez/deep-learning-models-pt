@@ -1,6 +1,6 @@
 from .base import ResNetBaseEncoder
 import torch.nn as nn
-from .common import BasicBlock
+from .common import BasicBlock, ResNetEncoderBasicBlock
 
 
 class ResNetEncoder(ResNetBaseEncoder):
@@ -21,32 +21,44 @@ class ResNetEncoder(ResNetBaseEncoder):
             ),
             nn.ReLU(inplace=True),
         )
-        self.encoder_block2 = nn.Sequential(
-            nn.MaxPool2d(
-                kernel_size=3, stride=2, padding=1, dilation=1, ceil_mode=False
-            ),
-            nn.Sequential(
-                BasicBlock(64, 64, has_downsample=False, stride=1),
-                BasicBlock(64, 64, has_downsample=False, stride=1),
-                BasicBlock(64, 64, has_downsample=False, stride=1),
-            ),
+        self.encoder_block2 = ResNetEncoderBasicBlock(
+            in_channels=64, out_channels=64, num_blocks=2, pool_block=True
         )
-        self.encoder_block3 = nn.Sequential(
-            BasicBlock(64, 128, has_downsample=True, stride=2),
-            BasicBlock(128, 128, has_downsample=False, stride=1),
-            BasicBlock(128, 128, has_downsample=False, stride=1),
-            BasicBlock(128, 128, has_downsample=False, stride=1),
+        # self.encoder_block2 = nn.Sequential(
+        #    nn.MaxPool2d(
+        #        kernel_size=3, stride=2, padding=1, dilation=1, ceil_mode=False
+        #    ),
+        #    nn.Sequential(
+        #        BasicBlock(64, 64, has_downsample=False, stride=1),
+        #        BasicBlock(64, 64, has_downsample=False, stride=1),
+        #        BasicBlock(64, 64, has_downsample=False, stride=1),
+        #    ),
+        # )
+        self.encoder_block3 = ResNetEncoderBasicBlock(
+            in_channels=64, out_channels=128, num_blocks=3, pool_block=False
         )
-        self.encoder_block4 = nn.Sequential(
-            BasicBlock(128, 256, has_downsample=True, stride=2),
-            BasicBlock(256, 256, has_downsample=False, stride=1),
-            BasicBlock(256, 256, has_downsample=False, stride=1),
-            BasicBlock(256, 256, has_downsample=False, stride=1),
-            BasicBlock(256, 256, has_downsample=False, stride=1),
-            BasicBlock(256, 256, has_downsample=False, stride=1),
+        # self.encoder_block3 = nn.Sequential(
+        #    BasicBlock(64, 128, has_downsample=True, stride=2),
+        #    BasicBlock(128, 128, has_downsample=False, stride=1),
+        #    BasicBlock(128, 128, has_downsample=False, stride=1),
+        #    BasicBlock(128, 128, has_downsample=False, stride=1),
+        # )
+        self.encoder_block4 = ResNetEncoderBasicBlock(
+            in_channels=128, out_channels=256, num_blocks=5, pool_block=False
         )
-        self.encoder_block5 = nn.Sequential(
-            BasicBlock(256, 512, has_downsample=True, stride=2),
-            BasicBlock(512, 512, has_downsample=False, stride=1),
-            BasicBlock(512, 512, has_downsample=False, stride=1),
+        # self.encoder_block4 = nn.Sequential(
+        #    BasicBlock(128, 256, has_downsample=True, stride=2),
+        #    BasicBlock(256, 256, has_downsample=False, stride=1),
+        #    BasicBlock(256, 256, has_downsample=False, stride=1),
+        #    BasicBlock(256, 256, has_downsample=False, stride=1),
+        #    BasicBlock(256, 256, has_downsample=False, stride=1),
+        #    BasicBlock(256, 256, has_downsample=False, stride=1),
+        # )
+        self.encoder_block5 = ResNetEncoderBasicBlock(
+            in_channels=256, out_channels=512, num_blocks=2, pool_block=False
         )
+        # self.encoder_block5 = nn.Sequential(
+        #    BasicBlock(256, 512, has_downsample=True, stride=2),
+        #    BasicBlock(512, 512, has_downsample=False, stride=1),
+        #    BasicBlock(512, 512, has_downsample=False, stride=1),
+        # )

@@ -168,13 +168,13 @@ class Bottleneck(nn.Module):
 
 
 def repeat_bsconvblock(
-    in_channels, out_channels, has_downsample, stride, blocks=1, *args, **kwargs
+    in_channels, out_channels, has_downsample, stride, num_blocks=1, *args, **kwargs
 ):
     return [
         BasicBlock(
             in_channels, out_channels, has_downsample=has_downsample, stride=stride
         )
-        for _ in range(blocks)
+        for _ in range(num_blocks)
     ]
 
 
@@ -184,7 +184,7 @@ def repeat_btconvblock(
     out_channels,
     has_downsample,
     stride,
-    blocks=1,
+    num_blocks=1,
     *args,
     **kwargs
 ):
@@ -198,7 +198,7 @@ def repeat_btconvblock(
             *args,
             **kwargs,
         )
-        for _ in range(blocks)
+        for _ in range(num_blocks)
     ]
 
 
@@ -229,12 +229,12 @@ class ResNetEncoderBasicBlock(nn.Module):
         )
 
     def forward(self, x, w=None):
-        if self.pool_block:
-            x = self.pool(x)
         if w is not None:
             print("x: ", x.shape)
             print("w: ", w.shape)
             x = torch.add(x, w)
+        if self.pool_block:
+            x = self.pool(x)
         x = self.block(x)
         return x
 
@@ -258,7 +258,11 @@ class ResNetEncoderBottleneckBlock(nn.Module):
             )
         self.block = nn.Sequential(
             Bottleneck(
-                in_channels, bt_channels, out_channels, has_downsample=True, stride=2
+                in_channels,
+                bt_channels,
+                out_channels,
+                has_downsample=True,
+                stride=1 if self.pool_block else 2,
             ),
             *repeat_btconvblock(
                 out_channels,
@@ -271,9 +275,11 @@ class ResNetEncoderBottleneckBlock(nn.Module):
         )
 
     def forward(self, x, w=None):
+        if w is not None:
+            print("x: ", x.shape)
+            print("w: ", w.shape)
+            x = torch.add(x, w)
         if self.pool_block:
             x = self.pool(x)
-        if w is not None:
-            x = torch.add(x, w)
         x = self.block(x)
         return x
