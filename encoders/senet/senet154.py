@@ -1,6 +1,6 @@
 from .base import SeNetBaseEncoder
 import torch.nn as nn
-from .common import SEBottleneck
+from .common import SEBottleneck, SENetEncoderBottleneckBlock
 
 
 class SENetEncoder(SeNetBaseEncoder):
@@ -34,66 +34,98 @@ class SENetEncoder(SeNetBaseEncoder):
             ),
             nn.ReLU(inplace=True),
         )
-        self.encoder_block2 = nn.Sequential(
-            nn.MaxPool2d(
-                kernel_size=3, stride=2, padding=1, dilation=1, ceil_mode=False
-            ),
-            nn.Sequential(
-                SEBottleneck(128, 128, 256, has_downsample=True, stride=1),
-                SEBottleneck(256, 128, 256, has_downsample=False, stride=1),
-                SEBottleneck(256, 128, 256, has_downsample=False, stride=1),
-            ),
+        self.encoder_block2 = SENetEncoderBottleneckBlock(
+            in_channels=128,
+            bt_channels=128,
+            out_channels=256,
+            se_size=16,
+            num_blocks=2,
+            pool_block=True,
         )
-        self.encoder_block3 = nn.Sequential(
-            SEBottleneck(256, 256, 512, has_downsample=True, stride=2, se_size=32),
-            SEBottleneck(512, 256, 512, has_downsample=False, stride=1, se_size=32),
-            SEBottleneck(512, 256, 512, has_downsample=False, stride=1, se_size=32),
-            SEBottleneck(512, 256, 512, has_downsample=False, stride=1, se_size=32),
-            SEBottleneck(512, 256, 512, has_downsample=False, stride=1, se_size=32),
-            SEBottleneck(512, 256, 512, has_downsample=False, stride=1, se_size=32),
-            SEBottleneck(512, 256, 512, has_downsample=False, stride=1, se_size=32),
-            SEBottleneck(512, 256, 512, has_downsample=False, stride=1, se_size=32),
+        # self.encoder_block2 = nn.Sequential(
+        #    nn.MaxPool2d(
+        #        kernel_size=3, stride=2, padding=1, dilation=1, ceil_mode=False
+        #    ),
+        #    nn.Sequential(
+        #        SEBottleneck(128, 128, 256, has_downsample=True, stride=1),
+        #        SEBottleneck(256, 128, 256, has_downsample=False, stride=1),
+        #        SEBottleneck(256, 128, 256, has_downsample=False, stride=1),
+        #    ),
+        # )
+        self.encoder_block3 = SENetEncoderBottleneckBlock(
+            in_channels=256,
+            bt_channels=256,
+            out_channels=512,
+            se_size=32,
+            num_blocks=7,
+            pool_block=False,
         )
-        self.encoder_block4 = nn.Sequential(
-            SEBottleneck(512, 512, 1024, has_downsample=True, stride=2, se_size=64),
-            SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
-            SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
-            SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
-            SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
-            SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
-            SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
-            SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
-            SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
-            SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
-            SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
-            SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
-            SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
-            SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
-            SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
-            SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
-            SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
-            SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
-            SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
-            SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
-            SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
-            SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
-            SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
-            SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
-            SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
-            SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
-            SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
-            SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
-            SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
-            SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
-            SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
-            SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
-            SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
-            SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
-            SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
-            SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
+        # self.encoder_block3 = nn.Sequential(
+        #    SEBottleneck(256, 256, 512, has_downsample=True, stride=2, se_size=32),
+        #    SEBottleneck(512, 256, 512, has_downsample=False, stride=1, se_size=32),
+        #    SEBottleneck(512, 256, 512, has_downsample=False, stride=1, se_size=32),
+        #    SEBottleneck(512, 256, 512, has_downsample=False, stride=1, se_size=32),
+        #    SEBottleneck(512, 256, 512, has_downsample=False, stride=1, se_size=32),
+        #    SEBottleneck(512, 256, 512, has_downsample=False, stride=1, se_size=32),
+        #    SEBottleneck(512, 256, 512, has_downsample=False, stride=1, se_size=32),
+        #    SEBottleneck(512, 256, 512, has_downsample=False, stride=1, se_size=32),
+        # )
+        self.encoder_block4 = SENetEncoderBottleneckBlock(
+            in_channels=512,
+            bt_channels=512,
+            out_channels=1024,
+            se_size=64,
+            num_blocks=35,
+            pool_block=False,
         )
-        self.encoder_block5 = nn.Sequential(
-            SEBottleneck(1024, 1024, 2048, has_downsample=True, stride=2, se_size=128),
-            SEBottleneck(2048, 1024, 2048, has_downsample=False, stride=1, se_size=128),
-            SEBottleneck(2048, 1024, 2048, has_downsample=False, stride=1, se_size=128),
+        # self.encoder_block4 = nn.Sequential(
+        #    SEBottleneck(512, 512, 1024, has_downsample=True, stride=2, se_size=64),
+        #    SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
+        #    SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
+        #    SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
+        #    SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
+        #    SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
+        #    SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
+        #    SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
+        #    SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
+        #    SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
+        #    SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
+        #    SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
+        #    SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
+        #    SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
+        #    SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
+        #    SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
+        #    SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
+        #    SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
+        #    SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
+        #    SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
+        #    SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
+        #    SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
+        #    SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
+        #    SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
+        #    SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
+        #    SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
+        #    SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
+        #    SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
+        #    SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
+        #    SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
+        #    SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
+        #    SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
+        #    SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
+        #    SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
+        #    SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
+        #    SEBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
+        # )
+        self.encoder_block5 = SENetEncoderBottleneckBlock(
+            in_channels=1024,
+            bt_channels=1024,
+            out_channels=2048,
+            se_size=128,
+            num_blocks=2,
+            pool_block=False,
         )
+        # self.encoder_block5 = nn.Sequential(
+        #    SEBottleneck(1024, 1024, 2048, has_downsample=True, stride=2, se_size=128),
+        #    SEBottleneck(2048, 1024, 2048, has_downsample=False, stride=1, se_size=128),
+        #    SEBottleneck(2048, 1024, 2048, has_downsample=False, stride=1, se_size=128),
+        # )
