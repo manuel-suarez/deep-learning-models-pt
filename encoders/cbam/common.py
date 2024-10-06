@@ -166,3 +166,76 @@ class CBAMBottleneck(nn.Module):
             x = torch.add(x1, x)
         x = self.relu3(x)
         return x
+
+
+def repeat_cbamconvblock(
+    in_channels,
+    bt_channels,
+    out_channels,
+    has_downsample,
+    stride,
+    se_size,
+    num_blocks=1,
+    *args,
+    **kwargs
+):
+    return [
+        CBAMBottleneck(
+            in_channels,
+            bt_channels,
+            out_channels,
+            has_downsample=has_downsample,
+            stride=stride,
+            se_size=se_size,
+            *args,
+            **kwargs
+        )
+        for _ in range(num_blocks)
+    ]
+
+
+class CBAMEncoderBottleneckBlock(nn.Module):
+    def __init__(
+        self,
+        in_channels,
+        bt_channels,
+        out_channels,
+        se_size,
+        num_blocks=1,
+        pool_block=False,
+        *args,
+        **kwargs
+    ) -> None:
+        super().__init__(*args, **kwargs)
+        self.pool_block = pool_block
+        if self.pool_block:
+            self.pool = nn.MaxPool2d(
+                kernel_size=3, stride=2, padding=1, dilation=1, ceil_mode=False
+            )
+        self.block = nn.Sequential(
+            CBAMBottleneck(
+                in_channels,
+                bt_channels,
+                out_channels,
+                has_downsample=True,
+                se_size=se_size,
+                stride=1 if self.pool_block else 2,
+            ),
+            *repeat_cbamconvblock(
+                out_channels,
+                bt_channels,
+                out_channels,
+                has_downsample=False,
+                stride=1,
+                se_size=se_size,
+                num_blocks=num_blocks,
+            )
+        )
+
+    def forward(self, x, w=None):
+        if w is not None:
+            x = torch.add(x, w)
+        if self.pool_block:
+            x = self.pool(x)
+        x = self.block(x)
+        return x

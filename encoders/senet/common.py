@@ -129,6 +129,7 @@ def repeat_sebtconvblock(
     out_channels,
     has_downsample,
     stride,
+    se_size,
     num_blocks=1,
     *args,
     **kwargs
@@ -140,6 +141,7 @@ def repeat_sebtconvblock(
             out_channels,
             has_downsample=has_downsample,
             stride=stride,
+            se_size=se_size,
             *args,
             **kwargs
         )
@@ -171,6 +173,7 @@ class SENetEncoderBottleneckBlock(nn.Module):
                 bt_channels,
                 out_channels,
                 has_downsample=True,
+                se_size=se_size,
                 stride=1 if self.pool_block else 2,
             ),
             *repeat_sebtconvblock(
@@ -179,6 +182,7 @@ class SENetEncoderBottleneckBlock(nn.Module):
                 out_channels,
                 has_downsample=False,
                 stride=1,
+                se_size=se_size,
                 num_blocks=num_blocks,
             )
         )
