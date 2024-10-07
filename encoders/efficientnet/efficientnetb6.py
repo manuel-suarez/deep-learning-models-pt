@@ -5,7 +5,7 @@ from .common import InitBlock, MBConvBlock, repeat_mbconvblock
 
 class EfficientNetEncoder(EfficientNetBaseEncoder):
     def __init__(self, in_channels=3, *args, **kwargs) -> None:
-        super().__init__(args, kwargs)
+        super().__init__(*args, **kwargs)
         self.encoder_block1 = InitBlock(in_channels=in_channels, out_channels=56)
         self.encoder_block2 = nn.Sequential(
             MBConvBlock(
