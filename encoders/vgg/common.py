@@ -1,12 +1,20 @@
 import torch
 import torch.nn as nn
+from models.encoders.base import BaseEncoderBlock
 
 
-class EncoderBlock(nn.Module):
+class EncoderBlock(BaseEncoderBlock):
     def __init__(
-        self, in_channels, out_channels, num_blocks=2, pool_block=True
+        self,
+        in_channels,
+        out_channels,
+        num_blocks=2,
+        pool_block=True,
+        wavelets_mode=False,
+        *args,
+        **kwargs
     ) -> None:
-        super().__init__()
+        super().__init__(wavelets_mode=wavelets_mode, pool_mode=0, *args, **kwargs)
         self.pool_block = pool_block
         if self.pool_block:
             self.pool = nn.MaxPool2d(
@@ -174,11 +182,3 @@ class EncoderBlock(nn.Module):
                 ),
                 nn.ReLU(inplace=True),
             )
-
-    def forward(self, x, w=None):
-        if self.pool_block:
-            x = self.pool(x)
-        if w is not None:
-            x = torch.add(x, w)
-        x = self.block(x)
-        return x

@@ -1,5 +1,6 @@
 import torch, torch.nn as nn
 import torch.nn.functional as F
+from models.encoders.base import BaseEncoderBlock
 
 
 class SpatialAttentionModule(nn.Module):
@@ -194,7 +195,7 @@ def repeat_cbamconvblock(
     ]
 
 
-class CBAMEncoderBottleneckBlock(nn.Module):
+class CBAMEncoderBottleneckBlock(BaseEncoderBlock):
     def __init__(
         self,
         in_channels,
@@ -203,10 +204,11 @@ class CBAMEncoderBottleneckBlock(nn.Module):
         se_size,
         num_blocks=1,
         pool_block=False,
+        wavelets_mode=False,
         *args,
         **kwargs
     ) -> None:
-        super().__init__(*args, **kwargs)
+        super().__init__(wavelets_mode=wavelets_mode, pool_mode=1, *args, **kwargs)
         self.pool_block = pool_block
         if self.pool_block:
             self.pool = nn.MaxPool2d(
@@ -231,11 +233,3 @@ class CBAMEncoderBottleneckBlock(nn.Module):
                 num_blocks=num_blocks,
             )
         )
-
-    def forward(self, x, w=None):
-        if w is not None:
-            x = torch.add(x, w)
-        if self.pool_block:
-            x = self.pool(x)
-        x = self.block(x)
-        return x

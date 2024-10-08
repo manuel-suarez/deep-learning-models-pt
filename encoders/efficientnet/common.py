@@ -1,4 +1,5 @@
 import torch, torch.nn as nn
+from models.encoders.base import BaseEncoderBlock
 
 
 class InitBlock(nn.Module):
@@ -135,3 +136,19 @@ def repeat_mbconvblock(kernels, stride=1, residual=True, blocks=1, *args, **kwar
         MBConvBlock(kernels, stride=stride, residual=residual, *args, **kwargs)
         for _ in range(blocks)
     ]
+
+
+class EfficientNetBaseEncoderBlock(BaseEncoderBlock):
+    def __init__(
+        self, blocks, wavelets_mode=False, pool_mode=False, *args, **kwargs
+    ) -> None:
+        super().__init__(
+            wavelets_mode=wavelets_mode, pool_mode=pool_mode, *args, **kwargs
+        )
+        self.block = nn.Sequential(*blocks)
+
+    def forward(self, x, w=None):
+        if w is not None:
+            x = torch.add(w, x)
+        x = self.block(x)
+        return x

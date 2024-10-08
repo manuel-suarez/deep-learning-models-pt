@@ -1,3 +1,4 @@
+import torch
 import torch.nn as nn
 
 
@@ -57,3 +58,21 @@ class BaseEncoderB6(nn.Module):
             c4 = self.encoder_block4(c3, x3)
             c5 = self.encoder_block5(c4, x4)
             return c1, c2, c3, c4, c5
+
+
+class BaseEncoderBlock(nn.Module):
+    def __init__(self, wavelets_mode=False, pool_mode=0, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+        self.wavelets_mode = wavelets_mode
+        # Pool mode indicates when the pool block must be evaluated, after or before the multiresolution operation block
+        self.pool_mode = pool_mode
+
+    def forward(self, x, w=None):
+        if self.pool_block and self.pool_mode == 0:
+            x = self.pool(x)
+        if w is not None:
+            x = torch.add(x, w)
+        if self.pool_block and self.pool_mode == 1:
+            x = self.pool(x)
+        x = self.block(x)
+        return x

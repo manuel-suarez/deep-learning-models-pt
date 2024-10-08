@@ -19,12 +19,12 @@ class EfficientNetBaseEncoder(BaseEncoderB6):
             x, x1, x2, x3, x4 = inputs
             # Process and add decomposition level
             c1 = self.encoder_block1(x)
-            x1 = torch.add(c1, x1)
-            c2 = self.encoder_block2(x1)
-            x2 = torch.add(c2, x2)
-            c3 = self.encoder_block3(x2)
-            x3 = torch.add(c3, x3)
-            c4 = self.encoder_block4(x3)
-            x4 = torch.add(c4, x4)
-            c5 = self.encoder_block5(x4)
+            # x1 = torch.add(c1, x1)
+            c2 = self.encoder_block2(c1, x1)
+            # x2 = torch.add(c2, x2)
+            c3 = self.encoder_block3(c2, x2)
+            # x3 = torch.add(c3, x3)
+            c4 = self.encoder_block4(c3, x3)
+            # x4 = torch.add(c4, x4)
+            c5 = self.encoder_block5(c4, x4)
             return c1, c2, c3, c4, c5

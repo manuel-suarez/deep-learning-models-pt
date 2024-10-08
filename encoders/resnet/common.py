@@ -1,4 +1,5 @@
 import torch, torch.nn as nn
+from models.encoders.base import BaseEncoderBlock
 
 
 class BasicBlock(nn.Module):
@@ -202,11 +203,18 @@ def repeat_btconvblock(
     ]
 
 
-class ResNetEncoderBasicBlock(nn.Module):
+class ResNetEncoderBasicBlock(BaseEncoderBlock):
     def __init__(
-        self, in_channels, out_channels, num_blocks=1, pool_block=False, *args, **kwargs
+        self,
+        in_channels,
+        out_channels,
+        num_blocks=1,
+        pool_block=False,
+        wavelets_mode=False,
+        *args,
+        **kwargs
     ) -> None:
-        super().__init__(*args, **kwargs)
+        super().__init__(wavelets_mode=wavelets_mode, pool_mode=1, *args, **kwargs)
         self.pool_block = pool_block
         if self.pool_block:
             self.pool = nn.MaxPool2d(
@@ -228,18 +236,8 @@ class ResNetEncoderBasicBlock(nn.Module):
             ),
         )
 
-    def forward(self, x, w=None):
-        if w is not None:
-            print("x: ", x.shape)
-            print("w: ", w.shape)
-            x = torch.add(x, w)
-        if self.pool_block:
-            x = self.pool(x)
-        x = self.block(x)
-        return x
 
-
-class ResNetEncoderBottleneckBlock(nn.Module):
+class ResNetEncoderBottleneckBlock(BaseEncoderBlock):
     def __init__(
         self,
         in_channels,
@@ -247,10 +245,11 @@ class ResNetEncoderBottleneckBlock(nn.Module):
         out_channels,
         num_blocks=1,
         pool_block=False,
+        wavelets_mode=False,
         *args,
         **kwargs
     ) -> None:
-        super().__init__(*args, **kwargs)
+        super().__init__(wavelets_mode=wavelets_mode, pool_mode=1, *args, **kwargs)
         self.pool_block = pool_block
         if self.pool_block:
             self.pool = nn.MaxPool2d(
@@ -273,13 +272,3 @@ class ResNetEncoderBottleneckBlock(nn.Module):
                 num_blocks=num_blocks,
             ),
         )
-
-    def forward(self, x, w=None):
-        if w is not None:
-            print("x: ", x.shape)
-            print("w: ", w.shape)
-            x = torch.add(x, w)
-        if self.pool_block:
-            x = self.pool(x)
-        x = self.block(x)
-        return x

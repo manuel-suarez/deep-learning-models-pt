@@ -1,6 +1,6 @@
 import torch.nn as nn
 from .base import EfficientNetBaseEncoder
-from .common import MBConvBlock
+from .common import MBConvBlock, EfficientNetBaseEncoderBlock
 
 
 class EfficientNetEncoder(EfficientNetBaseEncoder):
@@ -20,126 +20,134 @@ class EfficientNetEncoder(EfficientNetBaseEncoder):
             ),
             nn.SiLU(inplace=True),
         )
-        self.encoder_block2 = nn.Sequential(
-            MBConvBlock(
-                kernels=[32, 0, 32, 8, 32, 16],
-                stride=1,
-                residual=False,
-            ),
-            MBConvBlock(
-                kernels=[16, 0, 16, 4, 16, 16],
-                stride=1,
-                residual=True,
-            ),
-            MBConvBlock(
-                kernels=[16, 96, 96, 4, 96, 24],
-                stride=2,
-                residual=False,
-            ),
-            MBConvBlock(
-                kernels=[24, 144, 144, 6, 144, 24],
-                stride=1,
-                residual=True,
-            ),
-            MBConvBlock(
-                kernels=[24, 144, 144, 6, 144, 24],
-                stride=1,
-                residual=True,
-            ),
+        self.encoder_block2 = EfficientNetBaseEncoderBlock(
+            [
+                MBConvBlock(
+                    kernels=[32, 0, 32, 8, 32, 16],
+                    stride=1,
+                    residual=False,
+                ),
+                MBConvBlock(
+                    kernels=[16, 0, 16, 4, 16, 16],
+                    stride=1,
+                    residual=True,
+                ),
+                MBConvBlock(
+                    kernels=[16, 96, 96, 4, 96, 24],
+                    stride=2,
+                    residual=False,
+                ),
+                MBConvBlock(
+                    kernels=[24, 144, 144, 6, 144, 24],
+                    stride=1,
+                    residual=True,
+                ),
+                MBConvBlock(
+                    kernels=[24, 144, 144, 6, 144, 24],
+                    stride=1,
+                    residual=True,
+                ),
+            ]
         )
-        self.encoder_block3 = nn.Sequential(
-            MBConvBlock(
-                kernels=[24, 144, 144, 6, 144, 48],
-                stride=2,
-                residual=False,
-            ),
-            MBConvBlock(
-                kernels=[48, 288, 288, 12, 288, 48],
-                stride=1,
-                residual=True,
-            ),
-            MBConvBlock(
-                kernels=[48, 288, 288, 12, 288, 48],
-                stride=1,
-                residual=True,
-            ),
+        self.encoder_block3 = EfficientNetBaseEncoderBlock(
+            [
+                MBConvBlock(
+                    kernels=[24, 144, 144, 6, 144, 48],
+                    stride=2,
+                    residual=False,
+                ),
+                MBConvBlock(
+                    kernels=[48, 288, 288, 12, 288, 48],
+                    stride=1,
+                    residual=True,
+                ),
+                MBConvBlock(
+                    kernels=[48, 288, 288, 12, 288, 48],
+                    stride=1,
+                    residual=True,
+                ),
+            ]
         )
-        self.encoder_block4 = nn.Sequential(
-            MBConvBlock(
-                kernels=[48, 288, 288, 12, 288, 88],
-                stride=2,
-                residual=False,
-            ),
-            MBConvBlock(
-                kernels=[88, 528, 528, 22, 528, 88],
-                stride=1,
-                residual=True,
-            ),
-            MBConvBlock(
-                kernels=[88, 528, 528, 22, 528, 88],
-                stride=1,
-                residual=True,
-            ),
-            MBConvBlock(
-                kernels=[88, 528, 528, 22, 528, 88],
-                stride=1,
-                residual=True,
-            ),
-            MBConvBlock(
-                kernels=[88, 528, 528, 22, 528, 120],
-                stride=1,
-                residual=False,
-            ),
-            MBConvBlock(
-                kernels=[120, 720, 720, 30, 720, 120],
-                stride=1,
-                residual=True,
-            ),
-            MBConvBlock(
-                kernels=[120, 720, 720, 30, 720, 120],
-                stride=1,
-                residual=True,
-            ),
-            MBConvBlock(
-                kernels=[120, 720, 720, 30, 720, 120],
-                stride=1,
-                residual=True,
-            ),
+        self.encoder_block4 = EfficientNetBaseEncoderBlock(
+            [
+                MBConvBlock(
+                    kernels=[48, 288, 288, 12, 288, 88],
+                    stride=2,
+                    residual=False,
+                ),
+                MBConvBlock(
+                    kernels=[88, 528, 528, 22, 528, 88],
+                    stride=1,
+                    residual=True,
+                ),
+                MBConvBlock(
+                    kernels=[88, 528, 528, 22, 528, 88],
+                    stride=1,
+                    residual=True,
+                ),
+                MBConvBlock(
+                    kernels=[88, 528, 528, 22, 528, 88],
+                    stride=1,
+                    residual=True,
+                ),
+                MBConvBlock(
+                    kernels=[88, 528, 528, 22, 528, 120],
+                    stride=1,
+                    residual=False,
+                ),
+                MBConvBlock(
+                    kernels=[120, 720, 720, 30, 720, 120],
+                    stride=1,
+                    residual=True,
+                ),
+                MBConvBlock(
+                    kernels=[120, 720, 720, 30, 720, 120],
+                    stride=1,
+                    residual=True,
+                ),
+                MBConvBlock(
+                    kernels=[120, 720, 720, 30, 720, 120],
+                    stride=1,
+                    residual=True,
+                ),
+            ]
         )
-        self.encoder_block5 = nn.Sequential(
-            MBConvBlock(
-                kernels=[120, 720, 720, 30, 720, 208],
-                stride=2,
-                residual=False,
-            ),
-            MBConvBlock(
-                kernels=[208, 1248, 1248, 52, 1248, 208],
-                stride=1,
-                residual=True,
-            ),
-            MBConvBlock(
-                kernels=[208, 1248, 1248, 52, 1248, 208],
-                stride=1,
-                residual=True,
-            ),
-            MBConvBlock(
-                kernels=[208, 1248, 1248, 52, 1248, 208],
-                stride=1,
-                residual=True,
-            ),
-            MBConvBlock(
-                kernels=[208, 1248, 1248, 52, 1248, 208],
-                stride=1,
-                residual=True,
-            ),
-            MBConvBlock(
-                kernels=[208, 1248, 1248, 52, 1248, 352],
-                stride=1,
-                residual=False,
-            ),
-            MBConvBlock(
-                kernels=[352, 2112, 2112, 88, 2112, 352],
-                stride=1,
-                residual=True,
-            ),
+        self.encoder_block5 = EfficientNetBaseEncoderBlock(
+            [
+                MBConvBlock(
+                    kernels=[120, 720, 720, 30, 720, 208],
+                    stride=2,
+                    residual=False,
+                ),
+                MBConvBlock(
+                    kernels=[208, 1248, 1248, 52, 1248, 208],
+                    stride=1,
+                    residual=True,
+                ),
+                MBConvBlock(
+                    kernels=[208, 1248, 1248, 52, 1248, 208],
+                    stride=1,
+                    residual=True,
+                ),
+                MBConvBlock(
+                    kernels=[208, 1248, 1248, 52, 1248, 208],
+                    stride=1,
+                    residual=True,
+                ),
+                MBConvBlock(
+                    kernels=[208, 1248, 1248, 52, 1248, 208],
+                    stride=1,
+                    residual=True,
+                ),
+                MBConvBlock(
+                    kernels=[208, 1248, 1248, 52, 1248, 352],
+                    stride=1,
+                    residual=False,
+                ),
+                MBConvBlock(
+                    kernels=[352, 2112, 2112, 88, 2112, 352],
+                    stride=1,
+                    residual=True,
+                ),
+            ]
         )
