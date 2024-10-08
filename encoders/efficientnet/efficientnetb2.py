@@ -4,8 +4,8 @@ from .common import MBConvBlock, EfficientNetBaseEncoderBlock
 
 
 class EfficientNetEncoder(EfficientNetBaseEncoder):
-    def __init__(self, in_channels=3, *args, **kwargs) -> None:
-        super().__init__(*args, **kwargs)
+    def __init__(self, in_channels=3, wavelets_mode=False, *args, **kwargs) -> None:
+        super().__init__(in_channels, wavelets_mode, *args, **kwargs)
         self.encoder_block1 = nn.Sequential(
             nn.Conv2d(
                 in_channels,
@@ -47,7 +47,8 @@ class EfficientNetEncoder(EfficientNetBaseEncoder):
                     stride=1,
                     residual=True,
                 ),
-            ]
+            ],
+            wavelets_mode=wavelets_mode,
         )
         self.encoder_block3 = EfficientNetBaseEncoderBlock(
             [
@@ -66,7 +67,8 @@ class EfficientNetEncoder(EfficientNetBaseEncoder):
                     stride=1,
                     residual=True,
                 ),
-            ]
+            ],
+            wavelets_mode=wavelets_mode,
         )
         self.encoder_block4 = EfficientNetBaseEncoderBlock(
             [
@@ -110,7 +112,8 @@ class EfficientNetEncoder(EfficientNetBaseEncoder):
                     stride=1,
                     residual=True,
                 ),
-            ]
+            ],
+            wavelets_mode=wavelets_mode,
         )
         self.encoder_block5 = EfficientNetBaseEncoderBlock(
             [
@@ -149,5 +152,6 @@ class EfficientNetEncoder(EfficientNetBaseEncoder):
                     stride=1,
                     residual=True,
                 ),
-            ]
+            ],
+            wavelets_mode=wavelets_mode,
         )

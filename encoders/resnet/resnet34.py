@@ -4,8 +4,8 @@ from .common import BasicBlock, ResNetEncoderBasicBlock
 
 
 class ResNetEncoder(ResNetBaseEncoder):
-    def __init__(self, in_channels=3, *args, **kwargs) -> None:
-        super().__init__(in_channels, *args, **kwargs)
+    def __init__(self, in_channels=3, wavelets_mode=False, *args, **kwargs) -> None:
+        super().__init__(in_channels, wavelets_mode, *args, **kwargs)
         ## Encoder
         self.encoder_block1 = nn.Sequential(
             nn.Conv2d(
@@ -22,7 +22,11 @@ class ResNetEncoder(ResNetBaseEncoder):
             nn.ReLU(inplace=True),
         )
         self.encoder_block2 = ResNetEncoderBasicBlock(
-            in_channels=64, out_channels=64, num_blocks=2, pool_block=True
+            in_channels=64,
+            out_channels=64,
+            num_blocks=2,
+            pool_block=True,
+            wavelets_mode=wavelets_mode,
         )
         # self.encoder_block2 = nn.Sequential(
         #    nn.MaxPool2d(
@@ -35,7 +39,11 @@ class ResNetEncoder(ResNetBaseEncoder):
         #    ),
         # )
         self.encoder_block3 = ResNetEncoderBasicBlock(
-            in_channels=64, out_channels=128, num_blocks=3, pool_block=False
+            in_channels=64,
+            out_channels=128,
+            num_blocks=3,
+            pool_block=False,
+            wavelets_mode=wavelets_mode,
         )
         # self.encoder_block3 = nn.Sequential(
         #    BasicBlock(64, 128, has_downsample=True, stride=2),
@@ -44,7 +52,11 @@ class ResNetEncoder(ResNetBaseEncoder):
         #    BasicBlock(128, 128, has_downsample=False, stride=1),
         # )
         self.encoder_block4 = ResNetEncoderBasicBlock(
-            in_channels=128, out_channels=256, num_blocks=5, pool_block=False
+            in_channels=128,
+            out_channels=256,
+            num_blocks=5,
+            pool_block=False,
+            wavelets_mode=wavelets_mode,
         )
         # self.encoder_block4 = nn.Sequential(
         #    BasicBlock(128, 256, has_downsample=True, stride=2),
@@ -55,7 +67,11 @@ class ResNetEncoder(ResNetBaseEncoder):
         #    BasicBlock(256, 256, has_downsample=False, stride=1),
         # )
         self.encoder_block5 = ResNetEncoderBasicBlock(
-            in_channels=256, out_channels=512, num_blocks=2, pool_block=False
+            in_channels=256,
+            out_channels=512,
+            num_blocks=2,
+            pool_block=False,
+            wavelets_mode=wavelets_mode,
         )
         # self.encoder_block5 = nn.Sequential(
         #    BasicBlock(256, 512, has_downsample=True, stride=2),

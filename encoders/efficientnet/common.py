@@ -148,7 +148,9 @@ class EfficientNetBaseEncoderBlock(BaseEncoderBlock):
         self.block = nn.Sequential(*blocks)
 
     def forward(self, x, w=None):
+        print("Efficientnet base encoder block forward")
         if w is not None:
+            print(f"Wavelets mode level: {self.wavelets_mode}")
             x = torch.add(w, x)
         x = self.block(x)
         return x

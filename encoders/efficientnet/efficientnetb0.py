@@ -29,7 +29,8 @@ class EfficientNetEncoder(EfficientNetBaseEncoder):
                     stride=1,
                     residual=True,
                 ),
-            ]
+            ],
+            wavelets_mode=wavelets_mode,
         )
         self.encoder_block3 = EfficientNetBaseEncoderBlock(
             [
@@ -43,7 +44,8 @@ class EfficientNetEncoder(EfficientNetBaseEncoder):
                     stride=1,
                     residual=True,
                 ),
-            ]
+            ],
+            wavelets_mode=wavelets_mode,
         )
         self.encoder_block4 = EfficientNetBaseEncoderBlock(
             [
@@ -60,7 +62,8 @@ class EfficientNetEncoder(EfficientNetBaseEncoder):
                     stride=1,
                     residual=False,
                 ),
-            ]
+            ],
+            wavelets_mode=wavelets_mode,
         )
         self.encoder_block5 = EfficientNetBaseEncoderBlock(
             [
@@ -80,5 +83,6 @@ class EfficientNetEncoder(EfficientNetBaseEncoder):
                     stride=1,
                     residual=False,
                 ),
-            ]
+            ],
+            wavelets_mode=wavelets_mode,
         )

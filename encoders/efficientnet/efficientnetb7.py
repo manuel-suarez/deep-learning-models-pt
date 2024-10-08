@@ -9,8 +9,8 @@ from .common import (
 
 
 class EfficientNetEncoder(EfficientNetBaseEncoder):
-    def __init__(self, in_channels=3, *args, **kwargs) -> None:
-        super().__init__(*args, **kwargs)
+    def __init__(self, in_channels=3, wavelets_mode=False, *args, **kwargs) -> None:
+        super().__init__(in_channels, wavelets_mode, *args, **kwargs)
         self.encoder_block1 = InitBlock(
             in_channels=in_channels,
             out_channels=64,
@@ -39,7 +39,8 @@ class EfficientNetEncoder(EfficientNetBaseEncoder):
                     residual=True,
                     blocks=6,
                 ),
-            ]
+            ],
+            wavelets_mode=wavelets_mode,
         )
         self.encoder_block3 = EfficientNetBaseEncoderBlock(
             [
@@ -54,7 +55,8 @@ class EfficientNetEncoder(EfficientNetBaseEncoder):
                     residual=True,
                     blocks=6,
                 ),
-            ]
+            ],
+            wavelets_mode=wavelets_mode,
         )
         self.encoder_block4 = EfficientNetBaseEncoderBlock(
             [
@@ -80,7 +82,8 @@ class EfficientNetEncoder(EfficientNetBaseEncoder):
                     residual=True,
                     blocks=9,
                 ),
-            ]
+            ],
+            wavelets_mode=wavelets_mode,
         )
         self.encoder_block5 = EfficientNetBaseEncoderBlock(
             [
@@ -106,5 +109,6 @@ class EfficientNetEncoder(EfficientNetBaseEncoder):
                     residual=True,
                     blocks=3,
                 ),
-            ]
+            ],
+            wavelets_mode=wavelets_mode,
         )
