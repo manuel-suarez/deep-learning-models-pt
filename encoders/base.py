@@ -2,8 +2,8 @@ import torch.nn as nn
 
 
 class BaseEncoder(nn.Module):
-    def __init__(self, in_channels=3, wavelets_mode=False) -> None:
-        super().__init__()
+    def __init__(self, in_channels=3, wavelets_mode=False, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
         self.in_channels = in_channels
         self.wavelets_mode = wavelets_mode
 

@@ -4,8 +4,8 @@ from .common import SEBottleneck, SENetEncoderBottleneckBlock
 
 
 class SENetEncoder(SeNetBaseEncoder):
-    def __init__(self, in_channels=3, *args, **kwargs) -> None:
-        super().__init__(in_channels, *args, *kwargs)
+    def __init__(self, in_channels=3, wavelets_mode=False, *args, **kwargs) -> None:
+        super().__init__(in_channels, wavelets_mode, *args, *kwargs)
         self.encoder_block1 = nn.Sequential(
             nn.Conv2d(
                 in_channels,
