@@ -11,12 +11,15 @@ class PSPNet(nn.Module):
         in_channels=3,
         out_channels=1,
         activation=False,
+        wavelets_mode=False,
         *args,
         **kwargs
     ) -> None:
         super().__init__(*args, **kwargs)
         ## Encoder
-        self.encoder = get_encoder(encoder_name, in_channels=in_channels)
+        self.encoder = get_encoder(
+            encoder_name, in_channels=in_channels, wavelets_mode=wavelets_mode
+        )
         ## Decoder
         self.decoder = PSPDecoder(**get_pspnet_decoder_params(encoder_name))
         ## Segmentation

@@ -6,11 +6,18 @@ from .segmentation.segmentationhead import SegmentationHead
 
 class FPN(nn.Module):
     def __init__(
-        self, encoder_name, in_channels=3, out_channels=1, activation=False
+        self,
+        encoder_name,
+        in_channels=3,
+        out_channels=1,
+        activation=False,
+        wavelets_mode=False,
     ) -> None:
         super().__init__()
         ## Encoder
-        self.encoder = get_encoder(encoder_name, in_channels=in_channels)
+        self.encoder = get_encoder(
+            encoder_name, in_channels=in_channels, wavelets_mode=wavelets_mode
+        )
         ## Decoder
         self.decoder = FPNDecoder(**get_fpn_decoder_params(encoder_name))
         ## Segmentation
