@@ -3,8 +3,8 @@ from models.encoders.base import BaseEncoderB6
 
 
 class EfficientNetBaseEncoder(BaseEncoderB6):
-    def __init__(self, in_channels=3, *args, **kwargs) -> None:
-        super().__init__(in_channels, *args, **kwargs)
+    def __init__(self, in_channels=3, wavelets_mode=False, *args, **kwargs) -> None:
+        super().__init__(in_channels, wavelets_mode, *args, **kwargs)
 
     def forward(self, inputs):
         if not self.wavelets_mode:
@@ -27,3 +27,4 @@ class EfficientNetBaseEncoder(BaseEncoderB6):
             c4 = self.encoder_block4(x3)
             x4 = torch.add(c4, x4)
             c5 = self.encoder_block5(x4)
+            return c1, c2, c3, c4, c5
