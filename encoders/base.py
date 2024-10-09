@@ -68,21 +68,14 @@ class BaseEncoderBlock(nn.Module):
         self.pool_mode = pool_mode
 
     def forward(self, x, w=None):
-        print(f"Base encoder block forward: {self.pool_mode}")
         if self.pool_block and self.pool_mode == 0:
             x = self.pool(x)
         if w is not None:
-            print(f"Wavelets mode level: {self.wavelets_mode}")
             if self.wavelets_mode == 1:
                 x = torch.add(x, w)
             if self.wavelets_mode == 2:
-                print("x: ", x.shape)
-                print("w: ", w.shape)
                 x = torch.cat([x, w], dim=1)
-                print("cat: ", x.shape)
         if self.pool_block and self.pool_mode == 1:
-            print("Pool block, pool_mode=1: ", x.shape)
             x = self.pool(x)
-            print("Pool block, pool_mode=1: ", x.shape)
         x = self.block(x)
         return x

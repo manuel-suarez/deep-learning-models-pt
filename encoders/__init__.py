@@ -305,7 +305,6 @@ def get_encoder(name, in_channels=3, wavelets_mode=False):
 def get_unet_decoder_params(name, wavelets_mode):
     if name not in unet_decoder_params:
         raise EncoderException(encoder_name=name)
-    print("get unet decoder parameters: ", wavelets_mode)
     if wavelets_mode == 2 and (
         name.startswith("resnet") or name.startswith("senet") or name.startswith("cbam")
     ):

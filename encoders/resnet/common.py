@@ -7,7 +7,6 @@ class BasicBlock(nn.Module):
         self, kernels_in, kernels_out, stride=1, has_downsample=False, *args, **kwargs
     ) -> None:
         super().__init__(*args, **kwargs)
-        print("Basic block: ", kernels_in)
         self.kernels_in = kernels_in
         # Conv+BatchNorm+ReLU
         self.conv1 = nn.Conv2d(
@@ -62,31 +61,15 @@ class BasicBlock(nn.Module):
             )
 
     def forward(self, x):
-        print("Basic block forward: ")
-        print("x: ", x.shape, self.kernels_in)
-        print(self.conv1)
         x1 = self.conv1(x)
-        print("x1 conv1: ", x1.shape)
         x1 = self.bn1(x1)
-        print("x1 bn1: ", x1.shape)
         x1 = self.relu1(x1)
-        print("x1 relu: ", x1.shape)
         x1 = self.conv2(x1)
-        print("x1 conv2: ", x1.shape)
         x1 = self.bn2(x1)
-        print("x1 bn2: ", x1.shape)
         if self.has_downsample:
-            print("downsample")
-            print("x: ", x.shape)
             x2 = self.downsample(x)
-            print("x2: ", x2.shape)
-            print("x1: ", x1.shape)
             x = torch.add(x1, x2)
-            print("x: ", x.shape)
         else:
-            print("no downsample")
-            print("x1: ", x1.shape)
-            print("x: ", x.shape)
             x = torch.add(x1, x)
         x = self.relu2(x)
         return x
@@ -169,36 +152,18 @@ class Bottleneck(nn.Module):
             )
 
     def forward(self, x):
-        print("Bottleneck block forward: ")
-        print("x: ", x.shape)
-        print(self.conv1)
         x1 = self.conv1(x)
-        print("x1 conv1: ", x1.shape)
         x1 = self.bn1(x1)
-        print("x1 bn1: ", x1.shape)
         x1 = self.relu1(x1)
-        print("x1 relu: ", x1.shape)
         x1 = self.conv2(x1)
-        print("x1 conv2: ", x1.shape)
         x1 = self.bn2(x1)
-        print("x1 bn2: ", x1.shape)
         x1 = self.relu2(x1)
         x1 = self.conv3(x1)
-        print("x1 conv3: ", x1.shape)
         x1 = self.bn3(x1)
-        print("x1 bn3: ", x1.shape)
         if self.has_downsample:
-            print("downsample")
-            print("x: ", x.shape)
             x2 = self.downsample(x)
-            print("x2: ", x2.shape)
-            print("x1: ", x1.shape)
             x = torch.add(x1, x2)
-            print("x: ", x.shape)
         else:
-            print("no downsample")
-            print("x1: ", x1.shape)
-            print("x: ", x.shape)
             x = torch.add(x1, x)
         x = self.relu3(x)
         return x
@@ -256,7 +221,6 @@ class ResNetEncoderBasicBlock(BaseEncoderBlock):
             self.pool = nn.MaxPool2d(
                 kernel_size=3, stride=2, padding=1, dilation=1, ceil_mode=False
             )
-        print("ResNetEncoderBasicBlock: ", in_channels, out_channels)
         self.block = nn.Sequential(
             BasicBlock(
                 in_channels,
