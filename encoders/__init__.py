@@ -54,13 +54,21 @@ unet_decoder_params = {
     "vgg13": {"inputs": [1024, 768, 384, 192, 32], "has_center": True},
     "vgg16": {"inputs": [1024, 768, 384, 192, 32], "has_center": True},
     "vgg19": {"inputs": [1024, 768, 384, 192, 32], "has_center": True},
-    "resnet18": {"inputs": [768 + 7, 384 + 2, 192 + 1, 128, 32], "has_center": True},
-    "resnet34": {"inputs": [768 + 7, 384 + 2, 192 + 1, 128, 32], "has_center": True},
-    "resnet50": {"inputs": [3072 + 7, 768 + 2, 384 + 1, 128, 32]},
-    "resnet101": {"inputs": [3072 + 7, 768 + 2, 384 + 1, 128, 32]},
-    "resnet152": {"inputs": [3072 + 7, 768 + 2, 384 + 1, 128, 32]},
-    "senet154": {"inputs": [3072 + 7, 768 + 2, 384 + 1, 192, 32]},
-    "cbamnet154": {"inputs": [3072+7, 768+2, 384+1, 192, 32]},
+    "resnet18": {
+        "inputs": [768, 384, 192, 128, 32],
+        "has_center": True,
+        "center_add": 0,
+    },
+    "resnet34": {
+        "inputs": [768, 384, 192, 128, 32],
+        "has_center": True,
+        "center_add": 0,
+    },
+    "resnet50": {"inputs": [3072, 768, 384, 128, 32]},
+    "resnet101": {"inputs": [3072, 768, 384, 128, 32]},
+    "resnet152": {"inputs": [3072, 768, 384, 128, 32]},
+    "senet154": {"inputs": [3072, 768, 384, 192, 32]},
+    "cbamnet154": {"inputs": [3072, 768, 384, 192, 32]},
     "efficientnetb0": {"inputs": [432, 296, 152, 96, 32]},
     "efficientnetb1": {"inputs": [432, 296, 152, 96, 32]},
     "efficientnetb2": {"inputs": [472, 304, 152, 96, 32]},
@@ -294,9 +302,17 @@ def get_encoder(name, in_channels=3, wavelets_mode=False):
     return encoders[name](in_channels=in_channels, wavelets_mode=wavelets_mode)
 
 
-def get_unet_decoder_params(name):
+def get_unet_decoder_params(name, wavelets_mode):
     if name not in unet_decoder_params:
         raise EncoderException(encoder_name=name)
+    print("get unet decoder parameters: ", wavelets_mode)
+    if wavelets_mode == 2 and (
+        name.startswith("resnet") or name.startswith("senet") or name.startswith("cbam")
+    ):
+        unet_decoder_params[name]["inputs"][0] += 7
+        unet_decoder_params[name]["inputs"][1] += 2
+        unet_decoder_params[name]["inputs"][2] += 1
+        unet_decoder_params[name]["center_add"] = 4
     return unet_decoder_params[name]
 
 

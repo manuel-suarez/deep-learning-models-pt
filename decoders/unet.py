@@ -45,14 +45,17 @@ class UnetDecoder(nn.Module):
         inputs=[3072, 768, 384, 128, 32],
         outputs=[256, 128, 64, 32, 16],
         has_center=False,
-        center_size=512 + 4,
+        center_size=512,
+        center_add=0,
         *args,
         **kwargs
     ) -> None:
         super().__init__(*args, **kwargs)
         self.has_center = has_center
         if has_center:
-            self.center_block = CenterBlock(center_size, center_size)
+            self.center_block = CenterBlock(
+                center_size + center_add, center_size + center_add
+            )
         self.decoder_block1 = DecoderBlock(inputs[0], outputs[0])
         self.decoder_block2 = DecoderBlock(inputs[1], outputs[1])
         self.decoder_block3 = DecoderBlock(inputs[2], outputs[2])

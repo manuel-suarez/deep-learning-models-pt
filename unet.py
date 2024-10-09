@@ -19,7 +19,9 @@ class Unet(nn.Module):
             encoder_name, in_channels=in_channels, wavelets_mode=wavelets_mode
         )
         ## Decoder
-        self.decoder = UnetDecoder(**get_unet_decoder_params(encoder_name))
+        self.decoder = UnetDecoder(
+            **get_unet_decoder_params(encoder_name, wavelets_mode)
+        )
         ## Segmentation
         self.segmentation = SegmentationHead(
             out_channels=out_channels, has_activation=activation
