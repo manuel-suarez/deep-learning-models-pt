@@ -22,7 +22,7 @@ class BaseEncoderB5(nn.Module):
         # Level 0 of wavelets_mode indicates that in fact there is no wavelet decomposition but image shrink (using the same scale values for pixels only subsampling)
 
         # Level 1 of wavelets_mode indicates that there are a wavelets decomposition of the input and we are using "add" operation between decompositions and filters of encoder blocks
-        if self.wavelets_mode == 1:
+        if self.wavelets_mode >= 0:
             x, x1, x2, x3, x4 = inputs
             # Process and add decomposition level
             x = self.encoder_block1(x)
@@ -49,7 +49,7 @@ class BaseEncoderB6(nn.Module):
             c5 = self.encoder_block5(c4)
             return c1, c2, c3, c4, c5
         # We need to obtain the wavelet decomposition factors (4 decomposition levels)
-        if self.wavelets_mode == 1:
+        if self.wavelets_mode >= 0:
             x, x1, x2, x3, x4 = inputs
             # Process and add decomposition level
             c1 = self.encoder_block1(x)
@@ -68,7 +68,7 @@ class BaseEncoderBlock(nn.Module):
         self.pool_mode = pool_mode
 
     def forward(self, x, w=None):
-        print("Base encoder block forward")
+        print(f"Base encoder block forward: {self.pool_mode}")
         if self.pool_block and self.pool_mode == 0:
             x = self.pool(x)
         if w is not None:
@@ -76,8 +76,13 @@ class BaseEncoderBlock(nn.Module):
             if self.wavelets_mode == 1:
                 x = torch.add(x, w)
             if self.wavelets_mode == 2:
-                x = torch.cat([x, w])
+                print("x: ", x.shape)
+                print("w: ", w.shape)
+                x = torch.cat([x, w], dim=1)
+                print("cat: ", x.shape)
         if self.pool_block and self.pool_mode == 1:
+            print("Pool block, pool_mode=1: ", x.shape)
             x = self.pool(x)
+            print("Pool block, pool_mode=1: ", x.shape)
         x = self.block(x)
         return x

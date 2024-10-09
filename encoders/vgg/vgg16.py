@@ -9,15 +9,26 @@ class Vgg16Encoder(VggBaseEncoder):
         self.encoder_block1 = EncoderBlock(
             in_channels, 64, pool_block=False, wavelets_mode=wavelets_mode
         )
-        self.encoder_block2 = EncoderBlock(64, 128, wavelets_mode=wavelets_mode)
+        self.encoder_block2 = EncoderBlock(
+            64 + (1 if wavelets_mode == 2 else 0), 128, wavelets_mode=wavelets_mode
+        )
         self.encoder_block3 = EncoderBlock(
-            128, 256, num_blocks=3, wavelets_mode=wavelets_mode
+            128 + (1 if wavelets_mode == 2 else 0),
+            256,
+            num_blocks=3,
+            wavelets_mode=wavelets_mode,
         )
         self.encoder_block4 = EncoderBlock(
-            256, 512, num_blocks=3, wavelets_mode=wavelets_mode
+            256 + (1 if wavelets_mode == 2 else 0),
+            512,
+            num_blocks=3,
+            wavelets_mode=wavelets_mode,
         )
         self.encoder_block5 = EncoderBlock(
-            512, 512, num_blocks=3, wavelets_mode=wavelets_mode
+            512 + (1 if wavelets_mode == 2 else 0),
+            512,
+            num_blocks=3,
+            wavelets_mode=wavelets_mode,
         )
         self.encoder_block6 = nn.Sequential(
             nn.MaxPool2d(
