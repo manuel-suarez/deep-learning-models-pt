@@ -15,7 +15,7 @@ class EfficientNetBaseEncoder(BaseEncoderB6):
             c5 = self.encoder_block5(c4)
             return c1, c2, c3, c4, c5
         # We need to obtain the wavelet decomposition factors (4 decomposition levels)
-        if self.wavelets_mode == 1:
+        if self.wavelets_mode >= 1:
             x, x1, x2, x3, x4 = inputs
             # Process and add decomposition level
             c1 = self.encoder_block1(x)

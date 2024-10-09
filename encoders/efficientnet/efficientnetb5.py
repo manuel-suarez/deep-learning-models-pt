@@ -23,7 +23,7 @@ class EfficientNetEncoder(EfficientNetBaseEncoder):
         self.encoder_block2 = EfficientNetBaseEncoderBlock(
             [
                 MBConvBlock(
-                    kernels=[48, 0, 48, 12, 48, 24],
+                    kernels=[48 + (1 if wavelets_mode == 2 else 0), 0, 48, 12, 48, 24],
                     stride=1,
                     residual=False,
                 ),
@@ -73,7 +73,14 @@ class EfficientNetEncoder(EfficientNetBaseEncoder):
         self.encoder_block3 = EfficientNetBaseEncoderBlock(
             [
                 MBConvBlock(
-                    kernels=[40, 240, 240, 10, 240, 64],
+                    kernels=[
+                        40 + (1 if wavelets_mode == 2 else 0),
+                        240,
+                        240,
+                        10,
+                        240,
+                        64,
+                    ],
                     stride=2,
                     residual=False,
                 ),
@@ -103,7 +110,14 @@ class EfficientNetEncoder(EfficientNetBaseEncoder):
         self.encoder_block4 = EfficientNetBaseEncoderBlock(
             [
                 MBConvBlock(
-                    kernels=[64, 384, 384, 16, 384, 128],
+                    kernels=[
+                        64 + (1 if wavelets_mode == 2 else 0),
+                        384,
+                        384,
+                        16,
+                        384,
+                        128,
+                    ],
                     stride=2,
                     residual=False,
                 ),
@@ -178,7 +192,14 @@ class EfficientNetEncoder(EfficientNetBaseEncoder):
         self.encoder_block5 = EfficientNetBaseEncoderBlock(
             [
                 MBConvBlock(
-                    kernels=[176, 1056, 1056, 44, 1056, 304],
+                    kernels=[
+                        176 + (1 if wavelets_mode == 2 else 0),
+                        1056,
+                        1056,
+                        44,
+                        1056,
+                        304,
+                    ],
                     stride=2,
                     residual=False,
                 ),

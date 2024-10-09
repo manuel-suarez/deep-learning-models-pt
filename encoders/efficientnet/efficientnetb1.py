@@ -15,7 +15,7 @@ class EfficientNetEncoder(EfficientNetBaseEncoder):
         self.encoder_block2 = EfficientNetBaseEncoderBlock(
             [
                 MBConvBlock(
-                    kernels=[32, 8, 16],
+                    kernels=[32 + (1 if wavelets_mode == 2 else 0), 8, 16],
                     stride=1,
                     residual=False,
                 ),
@@ -38,7 +38,7 @@ class EfficientNetEncoder(EfficientNetBaseEncoder):
         self.encoder_block3 = EfficientNetBaseEncoderBlock(
             [
                 MBConvBlock(
-                    kernels=[24, 144, 6, 40],
+                    kernels=[24 + (1 if wavelets_mode == 2 else 0), 144, 6, 40],
                     stride=2,
                     residual=False,
                 ),
@@ -51,7 +51,7 @@ class EfficientNetEncoder(EfficientNetBaseEncoder):
         self.encoder_block4 = EfficientNetBaseEncoderBlock(
             [
                 MBConvBlock(
-                    kernels=[40, 240, 10, 80],
+                    kernels=[40 + (1 if wavelets_mode == 2 else 0), 240, 10, 80],
                     stride=2,
                     residual=False,
                 ),
@@ -72,7 +72,7 @@ class EfficientNetEncoder(EfficientNetBaseEncoder):
         self.encoder_block5 = EfficientNetBaseEncoderBlock(
             [
                 MBConvBlock(
-                    kernels=[112, 672, 28, 192],
+                    kernels=[112 + (1 if wavelets_mode == 2 else 0), 672, 28, 192],
                     stride=2,
                     residual=False,
                 ),
