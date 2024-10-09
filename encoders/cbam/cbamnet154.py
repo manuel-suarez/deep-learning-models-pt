@@ -35,9 +35,9 @@ class CBAMNetEncoder(CBAMNetBaseEncoder):
             nn.ReLU(inplace=True),
         )
         self.encoder_block2 = CBAMEncoderBottleneckBlock(
-            in_channels=128,
+            in_channels=128 + (1 if wavelets_mode == 2 else 0),
             bt_channels=128,
-            out_channels=256,
+            out_channels=256 + (1 if wavelets_mode == 2 else 0),
             se_size=16,
             num_blocks=2,
             pool_block=True,
@@ -54,9 +54,9 @@ class CBAMNetEncoder(CBAMNetBaseEncoder):
         #    ),
         # )
         self.encoder_block3 = CBAMEncoderBottleneckBlock(
-            in_channels=256,
+            in_channels=256 + (2 if wavelets_mode == 2 else 0),
             bt_channels=256,
-            out_channels=512,
+            out_channels=512 + (2 if wavelets_mode == 2 else 0),
             se_size=32,
             num_blocks=7,
             pool_block=False,
@@ -73,9 +73,9 @@ class CBAMNetEncoder(CBAMNetBaseEncoder):
         #    CBAMBottleneck(512, 256, 512, has_downsample=False, stride=1, se_size=32),
         # )
         self.encoder_block4 = CBAMEncoderBottleneckBlock(
-            in_channels=512,
+            in_channels=512 + (3 if wavelets_mode == 2 else 0),
             bt_channels=512,
-            out_channels=1024,
+            out_channels=1024 + (3 if wavelets_mode == 2 else 0),
             se_size=64,
             num_blocks=35,
             pool_block=False,
@@ -120,9 +120,9 @@ class CBAMNetEncoder(CBAMNetBaseEncoder):
         #    CBAMBottleneck(1024, 512, 1024, has_downsample=False, stride=1, se_size=64),
         # )
         self.encoder_block5 = CBAMEncoderBottleneckBlock(
-            in_channels=1024,
+            in_channels=1024 + (4 if wavelets_mode == 2 else 0),
             bt_channels=1024,
-            out_channels=2048,
+            out_channels=2048 + (4 if wavelets_mode == 2 else 0),
             se_size=128,
             num_blocks=2,
             pool_block=False,
