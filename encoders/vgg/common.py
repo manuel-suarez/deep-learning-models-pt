@@ -40,14 +40,14 @@ class EncoderBlock(BaseEncoderBlock):
             )
             self.wblock = nn.Sequential(
                 nn.Conv2d(
-                    in_channels,
-                    out_channels,
+                    1,
+                    in_channels // 2,
                     kernel_size=(3, 3),
                     stride=(1, 1),
                     padding=(1, 1),
                 ),
                 nn.BatchNorm2d(
-                    out_channels,
+                    in_channels // 2,
                     eps=1e-5,
                     momentum=0.1,
                     affine=True,
@@ -90,14 +90,14 @@ class EncoderBlock(BaseEncoderBlock):
             )
             self.wblock = nn.Sequential(
                 nn.Conv2d(
-                    in_channels,
-                    out_channels,
+                    1,
+                    in_channels // 2,
                     kernel_size=(3, 3),
                     stride=(1, 1),
                     padding=(1, 1),
                 ),
                 nn.BatchNorm2d(
-                    out_channels,
+                    in_channels // 2,
                     eps=1e-5,
                     momentum=0.1,
                     affine=True,
@@ -105,14 +105,14 @@ class EncoderBlock(BaseEncoderBlock):
                 ),
                 nn.ReLU(inplace=True),
                 nn.Conv2d(
-                    out_channels,
-                    out_channels,
+                    in_channels // 2,
+                    in_channels // 2,
                     kernel_size=(3, 3),
                     stride=(1, 1),
                     padding=(1, 1),
                 ),
                 nn.BatchNorm2d(
-                    out_channels,
+                    in_channels // 2,
                     eps=1e-5,
                     momentum=0.1,
                     affine=True,
@@ -170,8 +170,23 @@ class EncoderBlock(BaseEncoderBlock):
             )
             self.wblock = nn.Sequential(
                 nn.Conv2d(
-                    in_channels,
-                    out_channels,
+                    1,
+                    in_channels // 2,
+                    kernel_size=(3, 3),
+                    stride=(1, 1),
+                    padding=(1, 1),
+                ),
+                nn.BatchNorm2d(
+                    in_channels // 2,
+                    eps=1e-5,
+                    momentum=0.1,
+                    affine=True,
+                    track_running_stats=True,
+                ),
+                nn.ReLU(inplace=True),
+                nn.Conv2d(
+                    in_channels // 2,
+                    in_channels // 2,
                     kernel_size=(3, 3),
                     stride=(1, 1),
                     padding=(1, 1),
@@ -185,29 +200,14 @@ class EncoderBlock(BaseEncoderBlock):
                 ),
                 nn.ReLU(inplace=True),
                 nn.Conv2d(
-                    out_channels,
-                    out_channels,
+                    in_channels // 2,
+                    in_channels // 2,
                     kernel_size=(3, 3),
                     stride=(1, 1),
                     padding=(1, 1),
                 ),
                 nn.BatchNorm2d(
-                    out_channels,
-                    eps=1e-5,
-                    momentum=0.1,
-                    affine=True,
-                    track_running_stats=True,
-                ),
-                nn.ReLU(inplace=True),
-                nn.Conv2d(
-                    out_channels,
-                    out_channels,
-                    kernel_size=(3, 3),
-                    stride=(1, 1),
-                    padding=(1, 1),
-                ),
-                nn.BatchNorm2d(
-                    out_channels,
+                    in_channels // 2,
                     eps=1e-5,
                     momentum=0.1,
                     affine=True,
@@ -280,14 +280,14 @@ class EncoderBlock(BaseEncoderBlock):
             )
             self.wblock = nn.Sequential(
                 nn.Conv2d(
-                    in_channels,
-                    out_channels,
+                    1,
+                    in_channels // 2,
                     kernel_size=(3, 3),
                     stride=(1, 1),
                     padding=(1, 1),
                 ),
                 nn.BatchNorm2d(
-                    out_channels,
+                    in_channels // 2,
                     eps=1e-5,
                     momentum=0.1,
                     affine=True,
@@ -295,14 +295,14 @@ class EncoderBlock(BaseEncoderBlock):
                 ),
                 nn.ReLU(inplace=True),
                 nn.Conv2d(
-                    out_channels,
-                    out_channels,
+                    in_channels // 2,
+                    in_channels // 2,
                     kernel_size=(3, 3),
                     stride=(1, 1),
                     padding=(1, 1),
                 ),
                 nn.BatchNorm2d(
-                    out_channels,
+                    in_channels // 2,
                     eps=1e-5,
                     momentum=0.1,
                     affine=True,
@@ -310,14 +310,14 @@ class EncoderBlock(BaseEncoderBlock):
                 ),
                 nn.ReLU(inplace=True),
                 nn.Conv2d(
-                    out_channels,
-                    out_channels,
+                    in_channels // 2,
+                    in_channels // 2,
                     kernel_size=(3, 3),
                     stride=(1, 1),
                     padding=(1, 1),
                 ),
                 nn.BatchNorm2d(
-                    out_channels,
+                    in_channels // 2,
                     eps=1e-5,
                     momentum=0.1,
                     affine=True,
@@ -325,14 +325,14 @@ class EncoderBlock(BaseEncoderBlock):
                 ),
                 nn.ReLU(inplace=True),
                 nn.Conv2d(
-                    out_channels,
-                    out_channels,
+                    in_channels // 2,
+                    in_channels // 2,
                     kernel_size=(3, 3),
                     stride=(1, 1),
                     padding=(1, 1),
                 ),
                 nn.BatchNorm2d(
-                    out_channels,
+                    in_channels // 2,
                     eps=1e-5,
                     momentum=0.1,
                     affine=True,

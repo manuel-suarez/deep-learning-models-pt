@@ -12,25 +12,25 @@ class Vgg11Encoder(VggBaseEncoder):
             in_channels, 64, num_blocks=1, pool_block=False
         )
         self.encoder_block2 = EncoderBlock(
-            64 + (1 if wavelets_mode == 2 else 0),
+            64 + (1 if wavelets_mode == 2 else 0) + (64 if wavelets_mode == 3 else 0),
             128,
             num_blocks=1,
             wavelets_mode=wavelets_mode,
         )
         self.encoder_block3 = EncoderBlock(
-            128 + (1 if wavelets_mode == 2 else 0),
+            128 + (1 if wavelets_mode == 2 else 0) + (128 if wavelets_mode == 3 else 0),
             256,
             num_blocks=2,
             wavelets_mode=wavelets_mode,
         )
         self.encoder_block4 = EncoderBlock(
-            256 + (1 if wavelets_mode == 2 else 0),
+            256 + (1 if wavelets_mode == 2 else 0) + (256 if wavelets_mode == 3 else 0),
             512,
             num_blocks=2,
             wavelets_mode=wavelets_mode,
         )
         self.encoder_block5 = EncoderBlock(
-            512 + (1 if wavelets_mode == 2 else 0),
+            512 + (1 if wavelets_mode == 2 else 0) + (512 if wavelets_mode == 3 else 0),
             512,
             num_blocks=2,
             wavelets_mode=wavelets_mode,
