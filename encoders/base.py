@@ -75,6 +75,10 @@ class BaseEncoderBlock(nn.Module):
                 x = torch.add(x, w)
             if self.wavelets_mode == 2:
                 x = torch.cat([x, w], dim=1)
+            if self.wavelets_mode == 3:
+                # Apply conv filters to wavelets input and concatenate to previous encoder input
+                w = self.wblock(w)
+                x = torch.cat([w, w], dim=1)
         if self.pool_block and self.pool_mode == 1:
             x = self.pool(x)
         x = self.block(x)
