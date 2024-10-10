@@ -14,6 +14,7 @@ class Unet(nn.Module):
         wavelets_mode=False,
     ) -> None:
         super().__init__()
+        print(f"Initializing Unet model, wavelets mode: {wavelets_mode}")
         ## Encoder
         self.encoder = get_encoder(
             encoder_name, in_channels=in_channels, wavelets_mode=wavelets_mode
