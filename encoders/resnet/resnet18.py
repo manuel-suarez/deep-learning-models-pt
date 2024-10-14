@@ -21,8 +21,12 @@ class ResNetEncoder(ResNetBaseEncoder):
             nn.ReLU(inplace=True),
         )
         self.encoder_block2 = ResNetEncoderBasicBlock(
-            in_channels=64 + (1 if wavelets_mode == 2 else 0),
-            out_channels=64 + (1 if wavelets_mode == 2 else 0),
+            in_channels=64
+            + (1 if wavelets_mode == 2 else 0)
+            + (64 if wavelets_mode == 3 else 0),
+            out_channels=64
+            + (1 if wavelets_mode == 2 else 0)
+            + (64 if wavelets_mode == 3 else 0),
             num_blocks=1,
             pool_block=True,
             wavelets_mode=wavelets_mode,
@@ -37,8 +41,12 @@ class ResNetEncoder(ResNetBaseEncoder):
         #    ),
         # )
         self.encoder_block3 = ResNetEncoderBasicBlock(
-            in_channels=64 + (2 if wavelets_mode == 2 else 0),
-            out_channels=128 + (2 if wavelets_mode == 2 else 0),
+            in_channels=64
+            + (2 if wavelets_mode == 2 else 0)
+            + (64 if wavelets_mode == 3 else 0),
+            out_channels=128
+            + (2 if wavelets_mode == 2 else 0)
+            + (128 if wavelets_mode == 3 else 0),
             num_blocks=1,
             pool_block=False,
             wavelets_mode=wavelets_mode,

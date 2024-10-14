@@ -236,6 +236,21 @@ class ResNetEncoderBasicBlock(BaseEncoderBlock):
                 num_blocks=num_blocks,
             ),
         )
+        self.wblock = nn.Sequential(
+            BasicBlock(
+                1,
+                out_channels // 2,
+                has_downsample=False if self.pool_block else True,
+                stride=1 if self.pool_block else 2,
+            ),
+            *repeat_bsconvblock(
+                out_channels // 2,
+                out_channels // 2,
+                has_downsample=False,
+                stride=1,
+                num_blocks=num_blocks,
+            ),
+        )
 
 
 class ResNetEncoderBottleneckBlock(BaseEncoderBlock):
