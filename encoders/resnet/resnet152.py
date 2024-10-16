@@ -21,9 +21,13 @@ class ResNetEncoder(ResNetBaseEncoder):
             nn.ReLU(inplace=True),
         )
         self.encoder_block2 = ResNetEncoderBottleneckBlock(
-            in_channels=64 + (1 if wavelets_mode == 2 else 0),
+            in_channels=64
+            + (1 if wavelets_mode == 2 else 0)
+            + (1 if wavelets_mode == 3 else 0),
             bt_channels=64,
-            out_channels=256 + (1 if wavelets_mode == 2 else 0),
+            out_channels=256
+            + (1 if wavelets_mode == 2 else 0)
+            + (1 if wavelets_mode == 3 else 0),
             num_blocks=2,
             pool_block=True,
             wavelets_mode=wavelets_mode,
@@ -39,9 +43,13 @@ class ResNetEncoder(ResNetBaseEncoder):
         #     ),
         # )
         self.encoder_block3 = ResNetEncoderBottleneckBlock(
-            in_channels=256 + (2 if wavelets_mode == 2 else 0),
+            in_channels=256
+            + (2 if wavelets_mode == 2 else 0)
+            + (2 if wavelets_mode == 3 else 0),
             bt_channels=128,
-            out_channels=512 + (2 if wavelets_mode == 2 else 0),
+            out_channels=512
+            + (2 if wavelets_mode == 2 else 0)
+            + (2 if wavelets_mode == 3 else 0),
             num_blocks=7,
             pool_block=False,
             wavelets_mode=wavelets_mode,
@@ -57,9 +65,13 @@ class ResNetEncoder(ResNetBaseEncoder):
         #     Bottleneck(512, 128, 512, has_downsample=False, stride=1),
         # )
         self.encoder_block4 = ResNetEncoderBottleneckBlock(
-            in_channels=512 + (3 if wavelets_mode == 2 else 0),
+            in_channels=512
+            + (3 if wavelets_mode == 2 else 0)
+            + (3 if wavelets_mode == 3 else 0),
             bt_channels=256,
-            out_channels=1024 + (3 if wavelets_mode == 2 else 0),
+            out_channels=1024
+            + (3 if wavelets_mode == 2 else 0)
+            + (3 if wavelets_mode == 3 else 0),
             num_blocks=35,
             pool_block=False,
             wavelets_mode=wavelets_mode,
@@ -103,9 +115,13 @@ class ResNetEncoder(ResNetBaseEncoder):
         #     Bottleneck(1024, 256, 1024, has_downsample=False, stride=1),
         # )
         self.encoder_block5 = ResNetEncoderBottleneckBlock(
-            in_channels=1024 + (4 if wavelets_mode == 2 else 0),
+            in_channels=1024
+            + (4 if wavelets_mode == 2 else 0)
+            + (4 if wavelets_mode == 3 else 0),
             bt_channels=512,
-            out_channels=2048 + (4 if wavelets_mode == 2 else 0),
+            out_channels=2048
+            + (4 if wavelets_mode == 2 else 0)
+            + (4 if wavelets_mode == 3 else 0),
             num_blocks=2,
             pool_block=False,
             wavelets_mode=wavelets_mode,
