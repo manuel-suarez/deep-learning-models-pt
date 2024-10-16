@@ -71,7 +71,7 @@ class BaseEncoderBlock(nn.Module):
         print("Base encoder block forward")
         print("x: ", x.shape)
         if w is not None:
-            print("x: ", w.shape)
+            print("w: ", w.shape)
         print("pool mode: ", self.pool_mode)
         if self.pool_block and self.pool_mode == 0:
             x = self.pool(x)

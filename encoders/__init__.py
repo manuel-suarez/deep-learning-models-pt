@@ -305,7 +305,7 @@ def get_encoder(name, in_channels=3, wavelets_mode=False):
 def get_unet_decoder_params(name, wavelets_mode):
     if name not in unet_decoder_params:
         raise EncoderException(encoder_name=name)
-    if wavelets_mode == 2 and (
+    if (wavelets_mode == 2 or wavelets_mode == 3) and (
         name.startswith("resnet") or name.startswith("senet") or name.startswith("cbam")
     ):
         unet_decoder_params[name]["inputs"][0] += 7
