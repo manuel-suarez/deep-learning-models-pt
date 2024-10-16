@@ -18,7 +18,13 @@ class EfficientNetEncoder(EfficientNetBaseEncoder):
         self.encoder_block2 = EfficientNetBaseEncoderBlock(
             [
                 MBConvBlock(
-                    kernels=[64 + (1 if wavelets_mode == 2 else 0), 16, 32],
+                    kernels=[
+                        64
+                        + (1 if wavelets_mode == 2 else 0)
+                        + (1 if wavelets_mode == 3 else 0),
+                        16,
+                        32,
+                    ],
                     stride=1,
                     residual=False,
                 ),
@@ -45,7 +51,14 @@ class EfficientNetEncoder(EfficientNetBaseEncoder):
         self.encoder_block3 = EfficientNetBaseEncoderBlock(
             [
                 MBConvBlock(
-                    kernels=[48 + (1 if wavelets_mode == 2 else 0), 288, 12, 80],
+                    kernels=[
+                        48
+                        + (1 if wavelets_mode == 2 else 0)
+                        + (1 if wavelets_mode == 3 else 0),
+                        288,
+                        12,
+                        80,
+                    ],
                     stride=2,
                     residual=False,
                 ),
@@ -61,7 +74,14 @@ class EfficientNetEncoder(EfficientNetBaseEncoder):
         self.encoder_block4 = EfficientNetBaseEncoderBlock(
             [
                 MBConvBlock(
-                    kernels=[80 + (1 if wavelets_mode == 2 else 0), 480, 20, 160],
+                    kernels=[
+                        80
+                        + (1 if wavelets_mode == 2 else 0)
+                        + (1 if wavelets_mode == 3 else 0),
+                        480,
+                        20,
+                        160,
+                    ],
                     stride=2,
                     residual=False,
                 ),
@@ -88,7 +108,14 @@ class EfficientNetEncoder(EfficientNetBaseEncoder):
         self.encoder_block5 = EfficientNetBaseEncoderBlock(
             [
                 MBConvBlock(
-                    kernels=[224 + (1 if wavelets_mode == 2 else 0), 1244, 56, 384],
+                    kernels=[
+                        224
+                        + (1 if wavelets_mode == 2 else 0)
+                        + (1 if wavelets_mode == 3 else 0),
+                        1244,
+                        56,
+                        384,
+                    ],
                     stride=2,
                     residual=False,
                 ),

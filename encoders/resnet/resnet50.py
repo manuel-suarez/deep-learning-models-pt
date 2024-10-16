@@ -45,11 +45,11 @@ class ResNetEncoder(ResNetBaseEncoder):
         self.encoder_block3 = ResNetEncoderBottleneckBlock(
             in_channels=256
             + (2 if wavelets_mode == 2 else 0)
-            + (2 if wavelets_mode == 2 else 0),
+            + (2 if wavelets_mode == 3 else 0),
             bt_channels=128,
             out_channels=512
             + (2 if wavelets_mode == 2 else 0)
-            + (2 if wavelets_mode == 2 else 0),
+            + (2 if wavelets_mode == 3 else 0),
             num_blocks=3,
             pool_block=False,
             wavelets_mode=wavelets_mode,

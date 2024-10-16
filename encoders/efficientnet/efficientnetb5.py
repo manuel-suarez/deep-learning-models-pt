@@ -23,7 +23,16 @@ class EfficientNetEncoder(EfficientNetBaseEncoder):
         self.encoder_block2 = EfficientNetBaseEncoderBlock(
             [
                 MBConvBlock(
-                    kernels=[48 + (1 if wavelets_mode == 2 else 0), 0, 48, 12, 48, 24],
+                    kernels=[
+                        48
+                        + (1 if wavelets_mode == 2 else 0)
+                        + (1 if wavelets_mode == 3 else 0),
+                        0,
+                        48,
+                        12,
+                        48,
+                        24,
+                    ],
                     stride=1,
                     residual=False,
                 ),
@@ -74,7 +83,9 @@ class EfficientNetEncoder(EfficientNetBaseEncoder):
             [
                 MBConvBlock(
                     kernels=[
-                        40 + (1 if wavelets_mode == 2 else 0),
+                        40
+                        + (1 if wavelets_mode == 2 else 0)
+                        + (1 if wavelets_mode == 3 else 0),
                         240,
                         240,
                         10,
@@ -111,7 +122,9 @@ class EfficientNetEncoder(EfficientNetBaseEncoder):
             [
                 MBConvBlock(
                     kernels=[
-                        64 + (1 if wavelets_mode == 2 else 0),
+                        64
+                        + (1 if wavelets_mode == 2 else 0)
+                        + (1 if wavelets_mode == 3 else 0),
                         384,
                         384,
                         16,
@@ -193,7 +206,9 @@ class EfficientNetEncoder(EfficientNetBaseEncoder):
             [
                 MBConvBlock(
                     kernels=[
-                        176 + (1 if wavelets_mode == 2 else 0),
+                        176
+                        + (1 if wavelets_mode == 2 else 0)
+                        + (1 if wavelets_mode == 3 else 0),
                         1056,
                         1056,
                         44,

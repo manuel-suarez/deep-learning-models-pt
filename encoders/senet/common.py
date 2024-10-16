@@ -188,3 +188,33 @@ class SENetEncoderBottleneckBlock(BaseEncoderBlock):
                 num_blocks=num_blocks,
             )
         )
+        self.wblock = nn.Sequential(
+            nn.Conv2d(
+                1,
+                1,
+                kernel_size=(3, 3),
+                stride=(1, 1),
+                padding=(1, 1),
+            ),
+            nn.BatchNorm2d(
+                1,
+                eps=1e-5,
+                momentum=0.1,
+                affine=True,
+                track_running_stats=True,
+            ),
+            nn.ReLU(inplace=True),
+            # BasicBlock(
+            #    1,
+            #    out_channels // 2,
+            #    has_downsample=False if self.pool_block else True,
+            #    stride=1 if self.pool_block else 2,
+            # ),
+            # *repeat_bsconvblock(
+            #    out_channels // 2,
+            #    out_channels // 2,
+            #    has_downsample=False,
+            #    stride=1,
+            #    num_blocks=num_blocks,
+            # ),
+        )

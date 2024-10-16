@@ -23,7 +23,16 @@ class EfficientNetEncoder(EfficientNetBaseEncoder):
         self.encoder_block2 = EfficientNetBaseEncoderBlock(
             [
                 MBConvBlock(
-                    kernels=[48 + (1 if wavelets_mode == 2 else 0), 0, 48, 12, 48, 24],
+                    kernels=[
+                        48
+                        + (1 if wavelets_mode == 2 else 0)
+                        + (1 if wavelets_mode == 3 else 0),
+                        0,
+                        48,
+                        12,
+                        48,
+                        24,
+                    ],
                     stride=1,
                     residual=False,
                 ),
@@ -59,7 +68,9 @@ class EfficientNetEncoder(EfficientNetBaseEncoder):
             [
                 MBConvBlock(
                     kernels=[
-                        32 + (1 if wavelets_mode == 2 else 0),
+                        32
+                        + (1 if wavelets_mode == 2 else 0)
+                        + (1 if wavelets_mode == 3 else 0),
                         192,
                         192,
                         8,
@@ -91,7 +102,9 @@ class EfficientNetEncoder(EfficientNetBaseEncoder):
             [
                 MBConvBlock(
                     kernels=[
-                        56 + (1 if wavelets_mode == 2 else 0),
+                        56
+                        + (1 if wavelets_mode == 2 else 0)
+                        + (1 if wavelets_mode == 3 else 0),
                         336,
                         336,
                         14,
@@ -163,7 +176,9 @@ class EfficientNetEncoder(EfficientNetBaseEncoder):
             [
                 MBConvBlock(
                     kernels=[
-                        160 + (1 if wavelets_mode == 2 else 0),
+                        160
+                        + (1 if wavelets_mode == 2 else 0)
+                        + (1 if wavelets_mode == 3 else 0),
                         960,
                         960,
                         40,
