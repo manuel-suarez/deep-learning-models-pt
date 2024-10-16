@@ -24,13 +24,15 @@ class EncoderBlock(BaseEncoderBlock):
         self.wblock = nn.Sequential(
             nn.Conv2d(
                 1,
-                in_channels // 2,
+                1,
+                #in_channels // 2,
                 kernel_size=(3, 3),
                 stride=(1, 1),
                 padding=(1, 1),
             ),
             nn.BatchNorm2d(
-                in_channels // 2,
+                1,
+                #in_channels // 2,
                 eps=1e-5,
                 momentum=0.1,
                 affine=True,
