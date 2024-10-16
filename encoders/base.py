@@ -68,35 +68,35 @@ class BaseEncoderBlock(nn.Module):
         self.pool_mode = pool_mode
 
     def forward(self, x, w=None):
-        print("Base encoder block forward")
-        print("x: ", x.shape)
-        if w is not None:
-            print("w: ", w.shape)
-        print("pool mode: ", self.pool_mode)
+        # print("Base encoder block forward")
+        # print("x: ", x.shape)
+        # if w is not None:
+        # print("w: ", w.shape)
+        # print("pool mode: ", self.pool_mode)
         if self.pool_block and self.pool_mode == 0:
             x = self.pool(x)
-            print("x pool: ", x.shape)
+            # print("x pool: ", x.shape)
             # if w is not None:
             #    w = self.pool(w)
-            #    print("w pool: ", w.shape)
+            #    #print("w pool: ", w.shape)
         if w is not None:
             if self.wavelets_mode == 1:
                 x = torch.add(x, w)
             if self.wavelets_mode == 2:
                 x = torch.cat([x, w], dim=1)
             if self.wavelets_mode == 3:
-                print("BaseEncoderBlock forward")
-                print("w: ", w.shape)
-                print(self.wblock)
+                # print("BaseEncoderBlock forward")
+                # print("w: ", w.shape)
+                # print(self.wblock)
                 # Apply conv filters to wavelets input and concatenate to previous encoder input
                 w = self.wblock(w)
-                print("w: ", w.shape)
-                print("x: ", x.shape)
+                # print("w: ", w.shape)
+                # print("x: ", x.shape)
                 x = torch.cat([x, w], dim=1)
-                print("concat: ", x.shape)
+                # print("concat: ", x.shape)
         if self.pool_block and self.pool_mode == 1:
             x = self.pool(x)
-        print("x before block: ", x.shape)
+        # print("x before block: ", x.shape)
         x = self.block(x)
-        print("x after block: ", x.shape)
+        # print("x after block: ", x.shape)
         return x
