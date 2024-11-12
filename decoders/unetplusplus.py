@@ -25,13 +25,15 @@ class UnetPlusPlusDecoder(nn.Module):
         inputs_1=[512, 256, 128, 64],
         outputs_1=[256, 128, 64, 64],
         inputs_2=[256, 128, 64],
-        outputs_2=[128, 64, 64] * args,
+        outputs_2=[128, 64, 64],
         inputs_3=[128, 64],
-        outputs_3=[64, 64] ** kwargs,
+        outputs_3=[64, 64],
         inputs_4=[64],
         outputs_4=[32],
         inputs_5=32,
         outputs_5=16,
+        *args,
+        **kwargs
     ) -> None:
         super().__init__(*args, **kwargs)
         self.decoder_block1_1 = DecoderBlock(inputs_1[0], outputs_1[0])

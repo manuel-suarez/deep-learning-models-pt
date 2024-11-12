@@ -335,14 +335,15 @@ def get_encoder(name, in_channels=3, wavelets_mode=False):
 def get_unet_decoder_params(name, wavelets_mode):
     if name not in unet_decoder_params:
         raise EncoderException(encoder_name=name)
+    result = dict(unet_decoder_params)
     if (wavelets_mode == 2 or wavelets_mode == 3) and (
         name.startswith("resnet") or name.startswith("senet") or name.startswith("cbam")
     ):
-        unet_decoder_params[name]["inputs"][0] += 7
-        unet_decoder_params[name]["inputs"][1] += 2
-        unet_decoder_params[name]["inputs"][2] += 1
-        unet_decoder_params[name]["center_add"] = 4
-    return unet_decoder_params[name]
+        result[name]["inputs"][0] += 7
+        result[name]["inputs"][1] += 2
+        result[name]["inputs"][2] += 1
+        result[name]["center_add"] = 4
+    return result[name]
 
 
 def get_unetplusplus_decoder_params(name, wavelets_mode):
