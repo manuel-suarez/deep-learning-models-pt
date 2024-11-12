@@ -79,6 +79,36 @@ unet_decoder_params = {
     "efficientnetb7": {"inputs": [864, 336, 176, 128, 32]},
 }
 
+unetplusplus_decoder_params = {
+    "vgg11": {"inputs": [1024, 768, 384, 192, 32], "has_center": True},
+    "vgg13": {"inputs": [1024, 768, 384, 192, 32], "has_center": True},
+    "vgg16": {"inputs": [1024, 768, 384, 192, 32], "has_center": True},
+    "vgg19": {"inputs": [1024, 768, 384, 192, 32], "has_center": True},
+    "resnet18": {
+        "inputs": [768, 384, 192, 128, 32],
+        "has_center": True,
+        "center_add": 0,
+    },
+    "resnet34": {
+        "inputs": [768, 384, 192, 128, 32],
+        "has_center": True,
+        "center_add": 0,
+    },
+    "resnet50": {"inputs": [3072, 768, 384, 128, 32]},
+    "resnet101": {"inputs": [3072, 768, 384, 128, 32]},
+    "resnet152": {"inputs": [3072, 768, 384, 128, 32]},
+    "senet154": {"inputs": [3072, 768, 384, 192, 32]},
+    "cbamnet154": {"inputs": [3072, 768, 384, 192, 32]},
+    "efficientnetb0": {"inputs": [432, 296, 152, 96, 32]},
+    "efficientnetb1": {"inputs": [432, 296, 152, 96, 32]},
+    "efficientnetb2": {"inputs": [472, 304, 152, 96, 32]},
+    "efficientnetb3": {"inputs": [520, 304, 160, 104, 32]},
+    "efficientnetb4": {"inputs": [608, 312, 160, 112, 32]},
+    "efficientnetb5": {"inputs": [688, 320, 168, 112, 32]},
+    "efficientnetb6": {"inputs": [776, 328, 168, 120, 32]},
+    "efficientnetb7": {"inputs": [864, 336, 176, 128, 32]},
+}
+
 linknet_decoder_params = {
     "vgg11": {
         "inputs": [512, 512, 512, 256, 128],
@@ -315,6 +345,19 @@ def get_unet_decoder_params(name, wavelets_mode):
     return unet_decoder_params[name]
 
 
+def get_unetplusplus_decoder_params(name, wavelets_mode):
+    if name not in unetplusplus_decoder_params:
+        raise EncoderException(encoder_name=name)
+    if (wavelets_mode == 2 or wavelets_mode == 3) and (
+        name.startswith("resnet") or name.startswith("senet") or name.startswith("cbam")
+    ):
+        unetplusplus_decoder_params[name]["inputs"][0] += 7
+        unetplusplus_decoder_params[name]["inputs"][1] += 2
+        unetplusplus_decoder_params[name]["inputs"][2] += 1
+        unetplusplus_decoder_params[name]["center_add"] = 4
+    return unet_decoder_params[name]
+
+
 def get_linknet_decoder_params(name):
     try:
         return linknet_decoder_params[name]
@@ -337,6 +380,7 @@ def get_pspnet_decoder_params(name):
 __all__ = [
     get_encoder,
     get_unet_decoder_params,
+    get_unetplusplus_decoder_params,
     get_linknet_decoder_params,
     get_fpn_decoder_params,
     get_pspnet_decoder_params,
