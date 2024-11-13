@@ -26,7 +26,7 @@ class Conv2dReLU(nn.Module):
 
 class SeparableConv2d(nn.Module):
     def __init__(
-        self, kernels_in, kernels_out, padding, dilation=None, groups=512
+        self, kernels_in, kernels_out, padding, dilation=1, groups=512
     ) -> None:
         super().__init__()
         self.conv1 = nn.Conv2d(

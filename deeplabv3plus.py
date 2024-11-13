@@ -17,15 +17,18 @@ class DeepLabV3Plus(nn.Module):
         print(f"Initializing DeepLabV3Plus model, wavelets mode: {wavelets_mode}")
         ## Encoder
         self.encoder = get_encoder(
-            encoder_name, in_channels=in_channels, wavelets_mode=wavelets_mode
+            encoder_name,
+            in_channels=in_channels,
+            wavelets_mode=wavelets_mode,
+            deeplab_arch=True,
         )
         ## Decoder
         self.decoder = DeepLabV3PlusDecoder(
-            **get_deeplabv3plus_decoder_params(encoder_name, wavelets_mode)
+            **get_deeplabv3plus_decoder_params(encoder_name)
         )
         ## Segmentation
         self.segmentation = SegmentationHead(
-            out_channels=out_channels, has_activation=activation
+            kernels_in=256, out_channels=out_channels, has_activation=activation
         )
 
     def forward(self, inputs):

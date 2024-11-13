@@ -2,6 +2,7 @@ from .fpn import FPN
 from .unet import Unet
 from .unetplusplus import UnetPlusPlus
 from .linknet import Linknet
+from .deeplabv3plus import DeepLabV3Plus
 from .pspnet import PSPNet
 
 
@@ -16,4 +17,6 @@ def get_model(arch, args, encoder=None):
         return FPN(encoder_name=encoder, **args)
     if arch == "pspnet":
         return PSPNet(encoder_name=encoder, **args)
+    if arch == "deeplabv3plus":
+        return DeepLabV3Plus(encoder_name=encoder, **args)
     raise ValueError(f"No se encontró el modelo {arch}")
