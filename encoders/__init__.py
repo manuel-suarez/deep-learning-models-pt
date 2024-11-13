@@ -491,10 +491,12 @@ pspnet_decoder_params = {
 }
 
 
-def get_encoder(name, in_channels=3, wavelets_mode=False):
+def get_encoder(name, in_channels=3, wavelets_mode=False, deeplab_arch=False):
     if name not in encoders:
         raise EncoderException(encoder_name=name)
-    return encoders[name](in_channels=in_channels, wavelets_mode=wavelets_mode)
+    return encoders[name](
+        in_channels=in_channels, wavelets_mode=wavelets_mode, deeplab_arch=deeplab_arch
+    )
 
 
 def get_unet_decoder_params(name, wavelets_mode):
