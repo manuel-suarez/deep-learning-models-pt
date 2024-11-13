@@ -466,6 +466,8 @@ fpn_decoder_params = {
     },
 }
 
+deeplabv3plus_decoder_params = {"resnet18": {"kernels_in": 512, "kernels_out": 256}}
+
 pspnet_decoder_params = {
     "vgg11": {},
     "vgg13": {},
@@ -535,6 +537,12 @@ def get_fpn_decoder_params(name):
     return fpn_decoder_params[name]
 
 
+def get_deeplabv3plus_decoder_params(name):
+    if name not in deeplabv3plus_decoder_params:
+        raise EncoderException(encoder_name=name)
+    return deeplabv3plus_decoder_params[name]
+
+
 def get_pspnet_decoder_params(name):
     if name not in pspnet_decoder_params:
         raise EncoderException(encoder_name=name)
@@ -547,5 +555,6 @@ __all__ = [
     get_unetplusplus_decoder_params,
     get_linknet_decoder_params,
     get_fpn_decoder_params,
+    get_deeplabv3plus_decoder_params,
     get_pspnet_decoder_params,
 ]

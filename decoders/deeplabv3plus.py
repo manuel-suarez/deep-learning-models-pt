@@ -69,7 +69,7 @@ class ASPP(nn.Module):
         return x
 
 
-class DeepLavV3PlusDecoder(nn.Module):
+class DeepLabV3PlusDecoder(nn.Module):
     def __init__(self, kernels_in, kernels_out) -> None:
         super().__init__()
         self.block1 = nn.Sequential(
