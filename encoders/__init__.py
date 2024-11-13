@@ -22,9 +22,9 @@ from .efficientnet import (
 
 class EncoderException(Exception):
     def __init__(self, encoder_name, *args: object) -> None:
-        super().__init__(*args)
         self.encoder_name = encoder_name
         self.message = f"Encoder {encoder_name} not implemented"
+        super().__init__(self.message, *args)
 
 
 encoders = {
