@@ -22,3 +22,28 @@ class Conv2dReLU(nn.Module):
         x = self.bn(x)
         x = self.relu(x)
         return x
+
+
+class SeparableConv2d(nn.Module):
+    def __init__(
+        self, kernels_in, kernels_out, padding, dilation=None, groups=512
+    ) -> None:
+        super().__init__()
+        self.conv1 = nn.Conv2d(
+            kernels_in,
+            kernels_in,
+            kernel_size=(3, 3),
+            stride=(1, 1),
+            padding=(padding, padding),
+            dilation=(dilation, dilation),
+            groups=groups,
+            bias=False,
+        )
+        self.conv2 = nn.Conv2d(
+            kernels_in, kernels_out, kernel_size=(1, 1), stride=(1, 1), bias=False
+        )
+
+    def forward(self, x):
+        x = self.conv1(x)
+        x = self.conv2(x)
+        return x
