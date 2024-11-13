@@ -159,12 +159,14 @@ class SENetEncoderBottleneckBlock(BaseEncoderBlock):
         se_size,
         num_blocks=1,
         pool_block=False,
+        stride=False,
         wavelets_mode=False,
         *args,
         **kwargs
     ) -> None:
         super().__init__(wavelets_mode=wavelets_mode, pool_mode=1, *args, **kwargs)
         self.pool_block = pool_block
+        self.stride = stride
         if self.pool_block:
             self.pool = nn.MaxPool2d(
                 kernel_size=3, stride=2, padding=1, dilation=1, ceil_mode=False
@@ -176,7 +178,7 @@ class SENetEncoderBottleneckBlock(BaseEncoderBlock):
                 out_channels,
                 has_downsample=True,
                 se_size=se_size,
-                stride=1 if self.pool_block else 2,
+                stride=1 if (self.pool_block or self.stride) else 2,
             ),
             *repeat_sebtconvblock(
                 out_channels,
