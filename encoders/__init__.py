@@ -466,7 +466,13 @@ fpn_decoder_params = {
     },
 }
 
-deeplabv3plus_decoder_params = {"resnet18": {"kernels_in": 512, "kernels_out": 256}}
+deeplabv3plus_decoder_params = {
+    "resnet18": {"kernels_in": 512, "kernels_out": 256},
+    "resnet34": {"kernels_in": 512, "kernels_out": 256},
+    "resnet50": {"kernels_in": 2048, "kernels_out": 256, "kernels": 256},
+    "resnet101": {"kernels_in": 2048, "kernels_out": 256, "kernels": 256},
+    "resnet152": {"kernels_in": 2048, "kernels_out": 256, "kernels": 256},
+}
 
 pspnet_decoder_params = {
     "vgg11": {},

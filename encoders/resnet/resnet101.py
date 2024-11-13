@@ -4,7 +4,9 @@ from .common import Bottleneck, ResNetEncoderBottleneckBlock
 
 
 class ResNetEncoder(ResNetBaseEncoder):
-    def __init__(self, in_channels=3, wavelets_mode=False, *args, **kwargs) -> None:
+    def __init__(
+        self, in_channels=3, wavelets_mode=False, deeplab_arch=False, *args, **kwargs
+    ) -> None:
         super().__init__(in_channels, wavelets_mode, *args, **kwargs)
         self.encoder_block1 = nn.Sequential(
             nn.Conv2d(
@@ -107,6 +109,7 @@ class ResNetEncoder(ResNetBaseEncoder):
             + (4 if wavelets_mode == 3 else 0),
             num_blocks=2,
             pool_block=False,
+            stride=deeplab_arch,
             wavelets_mode=wavelets_mode,
         )
         # self.encoder_block5 = nn.Sequential(

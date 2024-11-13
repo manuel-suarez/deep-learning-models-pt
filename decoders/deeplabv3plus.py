@@ -105,7 +105,7 @@ class ASPP(nn.Module):
 
 
 class DeepLabV3PlusDecoder(nn.Module):
-    def __init__(self, kernels_in, kernels_out) -> None:
+    def __init__(self, kernels_in, kernels_out, kernels=64) -> None:
         super().__init__()
         self.block1 = nn.Sequential(
             ASPP(kernels_in, kernels_out),
@@ -120,7 +120,7 @@ class DeepLabV3PlusDecoder(nn.Module):
             nn.ReLU(),
         )
         self.block2 = nn.Sequential(
-            nn.Conv2d(64, 48, kernel_size=(1, 1), stride=(1, 1), bias=False),
+            nn.Conv2d(kernels, 48, kernel_size=(1, 1), stride=(1, 1), bias=False),
             nn.BatchNorm2d(
                 48, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True
             ),

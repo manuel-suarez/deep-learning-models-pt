@@ -286,12 +286,14 @@ class ResNetEncoderBottleneckBlock(BaseEncoderBlock):
         out_channels,
         num_blocks=1,
         pool_block=False,
+        stride=False,
         wavelets_mode=False,
         *args,
         **kwargs
     ) -> None:
         super().__init__(wavelets_mode=wavelets_mode, pool_mode=1, *args, **kwargs)
         self.pool_block = pool_block
+        self.stride = stride
         if self.pool_block:
             self.pool = nn.MaxPool2d(
                 kernel_size=3, stride=2, padding=1, dilation=1, ceil_mode=False
@@ -302,7 +304,7 @@ class ResNetEncoderBottleneckBlock(BaseEncoderBlock):
                 bt_channels,
                 out_channels,
                 has_downsample=True,
-                stride=1 if self.pool_block else 2,
+                stride=1 if (self.pool_block or self.stride) else 2,
             ),
             *repeat_btconvblock(
                 out_channels,
