@@ -3,7 +3,9 @@ from models.encoders.base import BaseEncoderB6
 
 
 class EfficientNetBaseEncoder(BaseEncoderB6):
-    def __init__(self, in_channels=3, wavelets_mode=False, *args, **kwargs) -> None:
+    def __init__(
+        self, in_channels=3, wavelets_mode=False, deeplab_arch=False, *args, **kwargs
+    ) -> None:
         super().__init__(in_channels, wavelets_mode, *args, **kwargs)
 
     def forward(self, inputs):

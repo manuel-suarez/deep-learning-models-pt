@@ -474,6 +474,13 @@ deeplabv3plus_decoder_params = {
     "resnet152": {"kernels_in": 2048, "kernels_out": 256, "kernels": 256},
     "senet154": {"kernels_in": 2048, "kernels_out": 256, "kernels": 256},
     "cbamnet154": {"kernels_in": 2048, "kernels_out": 256, "kernels": 256},
+    "efficientnetb0": {
+        "kernels_in": 320,
+        "kernels_out": 256,
+        "kernels": 24,
+        "groups": 256,
+        "aspp_groups": 320,
+    },
 }
 
 pspnet_decoder_params = {

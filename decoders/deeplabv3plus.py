@@ -42,7 +42,7 @@ class ASPPooling(nn.Module):
 
 
 class ASPP(nn.Module):
-    def __init__(self, kernels_in, kernels_out) -> None:
+    def __init__(self, kernels_in, kernels_out, groups=512) -> None:
         super().__init__()
         self.block1 = nn.Sequential(
             nn.Conv2d(kernels_in, kernels_out, kernel_size=(1, 1)),
@@ -56,13 +56,13 @@ class ASPP(nn.Module):
             nn.ReLU(),
         )
         self.conv1 = ASPPSeparableConv(
-            kernels_in, kernels_out, padding=12, dilation=12, groups=512
+            kernels_in, kernels_out, padding=12, dilation=12, groups=groups
         )
         self.conv2 = ASPPSeparableConv(
-            kernels_in, kernels_out, padding=24, dilation=24, groups=512
+            kernels_in, kernels_out, padding=24, dilation=24, groups=groups
         )
         self.conv3 = ASPPSeparableConv(
-            kernels_in, kernels_out, padding=36, dilation=36, groups=512
+            kernels_in, kernels_out, padding=36, dilation=36, groups=groups
         )
         self.pool = ASPPooling(kernels_in, kernels_out)
         self.project = nn.Sequential(
@@ -105,11 +105,13 @@ class ASPP(nn.Module):
 
 
 class DeepLabV3PlusDecoder(nn.Module):
-    def __init__(self, kernels_in, kernels_out, kernels=64) -> None:
+    def __init__(
+        self, kernels_in, kernels_out, groups=256, aspp_groups=512, kernels=64
+    ) -> None:
         super().__init__()
         self.block1 = nn.Sequential(
-            ASPP(kernels_in, kernels_out),
-            SeparableConv2d(kernels_out, kernels_out, padding=1, groups=256),
+            ASPP(kernels_in, kernels_out, groups=aspp_groups),
+            SeparableConv2d(kernels_out, kernels_out, padding=1, groups=groups),
             nn.BatchNorm2d(
                 kernels_out,
                 eps=1e-05,
