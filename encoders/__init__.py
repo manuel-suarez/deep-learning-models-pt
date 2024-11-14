@@ -481,6 +481,55 @@ deeplabv3plus_decoder_params = {
         "groups": 256,
         "aspp_groups": 320,
     },
+    "efficientnetb1": {
+        "kernels_in": 320,
+        "kernels_out": 256,
+        "kernels": 24,
+        "groups": 256,
+        "aspp_groups": 320,
+    },
+    "efficientnetb2": {
+        "kernels_in": 352,
+        "kernels_out": 256,
+        "kernels": 24,
+        "groups": 256,
+        "aspp_groups": 352,
+    },
+    "efficientnetb3": {
+        "kernels_in": 384,
+        "kernels_out": 256,
+        "kernels": 32,
+        "groups": 256,
+        "aspp_groups": 384,
+    },
+    "efficientnetb4": {
+        "kernels_in": 448,
+        "kernels_out": 256,
+        "kernels": 32,
+        "groups": 256,
+        "aspp_groups": 448,
+    },
+    "efficientnetb5": {
+        "kernels_in": 512,
+        "kernels_out": 256,
+        "kernels": 40,
+        "groups": 256,
+        "aspp_groups": 512,
+    },
+    "efficientnetb6": {
+        "kernels_in": 576,
+        "kernels_out": 256,
+        "kernels": 40,
+        "groups": 256,
+        "aspp_groups": 576,
+    },
+    "efficientnetb7": {
+        "kernels_in": 640,
+        "kernels_out": 256,
+        "kernels": 48,
+        "groups": 256,
+        "aspp_groups": 640,
+    },
 }
 
 pspnet_decoder_params = {

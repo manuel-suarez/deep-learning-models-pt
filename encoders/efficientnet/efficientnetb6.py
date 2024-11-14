@@ -9,7 +9,9 @@ from .common import (
 
 
 class EfficientNetEncoder(EfficientNetBaseEncoder):
-    def __init__(self, in_channels=3, wavelets_mode=False, *args, **kwargs) -> None:
+    def __init__(
+        self, in_channels=3, wavelets_mode=False, deeplab_arch=False, *args, **kwargs
+    ) -> None:
         super().__init__(in_channels, wavelets_mode, *args, **kwargs)
         self.encoder_block1 = InitBlock(in_channels=in_channels, out_channels=56)
         self.encoder_block2 = EfficientNetBaseEncoderBlock(
@@ -113,7 +115,7 @@ class EfficientNetEncoder(EfficientNetBaseEncoder):
                         50,
                         344,
                     ],
-                    stride=2,
+                    stride=2 if not deeplab_arch else 1,
                     residual=False,
                 ),
                 *repeat_mbconvblock(
