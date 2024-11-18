@@ -2,12 +2,12 @@ import torch.nn as nn
 
 
 class Conv2dReLU(nn.Module):
-    def __init__(self, kernels_in, kernels_out):
+    def __init__(self, kernels_in, kernels_out, kernel_size=3):
         super().__init__()
         self.conv = nn.Conv2d(
             kernels_in,
             kernels_out,
-            kernel_size=(3, 3),
+            kernel_size=(kernel_size, kernel_size),
             stride=(1, 1),
             padding=(1, 1),
             bias=False,
