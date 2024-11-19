@@ -556,17 +556,42 @@ pspnet_decoder_params = {
 
 manet_decoder_params = {
     "vgg11": {
-        "encoder_channels": [512,512,256,128,64,], 
-        "decoder_channels": [64,256,128,64,32]
+        "inputs": [
+            512,
+            512,
+            256,
+            128,
+            64,
+            32,
+        ],
+        "mid_channels": [
+            512,
+            512,
+            256,
+            128,
+        ],
+        "outputs": [512, 256, 128, 64, 32, 16],
     },
     "vgg13": {
-        "encoder_channels": [512,512,256,128,64,], 
-        "decoder_channels": [64,256,128,64,32]
+        "encoder_channels": [
+            512,
+            512,
+            256,
+            128,
+            64,
+        ],
+        "decoder_channels": [64, 256, 128, 64, 32],
     },
     "vgg16": {
-        "encoder_channels": [512,512,256,128,64,], 
-        "decoder_channels": [64,256,128,64,32]
-    }
+        "encoder_channels": [
+            512,
+            512,
+            256,
+            128,
+            64,
+        ],
+        "decoder_channels": [64, 256, 128, 64, 32],
+    },
 }
 
 

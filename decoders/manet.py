@@ -9,81 +9,118 @@ class PAB(nn.Module):
         self, in_channels, out_channels, pab_channels=64, *args, **kwargs
     ) -> None:
         super().__init__(*args, **kwargs)
-        self.top_conv = nn.Conv2d(in_channels, pab_channels, kernel_size=1)
-        self.center_conv = nn.Conv2d(in_channels, pab_channels, kernel_size=1)
-        self.bottom_conv = nn.Conv2d(in_channels, in_channels, kernel_size=3, padding=1)
+        self.in_channels = in_channels
+        self.conv_top = nn.Conv2d(in_channels, pab_channels, kernel_size=1)
+        self.conv_center = nn.Conv2d(in_channels, pab_channels, kernel_size=1)
+        self.conv_bottom = nn.Conv2d(in_channels, in_channels, kernel_size=3, padding=1)
+        self.conv_out = nn.Conv2d(in_channels, out_channels, kernel_size=3, padding=1)
         self.map_softmax = nn.Softmax(dim=1)
-        self.out_conv = nn.Conv2d(in_channels, in_channels, kernel_size=3, padding=1)
 
     def forward(self, x):
+        print("PAB forward")
+        print("x: ", x.shape, x.size())
         bsize = x.size()[0]
         h = x.size()[2]
         w = x.size()[3]
-        x_top = self.top_conv(x)
-        x_center = self.center_conv(x)
-        x_bottom = self.bottom_conv(x)
 
-        x_top = x_top.flatten(2)
-        x_center = x_center.flatten(2).transpose(1, 2)
-        x_bottom = x_bottom.flatten(2).transpose(1, 2)
+        # Apply convolutions
+        x_top = self.conv_top(x)
+        print("x top: ", x_top.shape)
+        x_center = self.conv_center(x)
+        print("x center: ", x_center.shape)
+        x_bottom = self.conv_bottom(x)
+        print("x bottom: ", x_bottom.shape)
 
+        # Flatten
+        x_top = torch.flatten(x_top, 2)
+        print("x top flatten: ", x_top.shape)
+        x_center = torch.flatten(x_center, 2)
+        print("x center flatten: ", x_center.shape)
+        x_bottom = torch.flatten(x_bottom, 2)
+        print("x bottom flatten: ", x_bottom.shape)
+
+        # Transpose
+        x_center = torch.transpose(x_center, 1, 2)
+        print("x center transpose: ", x_center.shape)
+        x_bottom = torch.transpose(x_bottom, 1, 2)
+        print("x bottom transpose: ", x_bottom.shape)
+
+        # Matmul & view & softmax
         sp_map = torch.matmul(x_center, x_top)
-        sp_map = self.map_softmax(sp_map.view(bsize, -1)).view(bsize, h * w, h * w)
+        print("sp_map matmul: ", sp_map.shape)
+        sp_map = sp_map.view(bsize, -1)
+        print("sp_map view: ", sp_map.shape)
+        sp_map = self.map_softmax(sp_map)
+        print("sp_map softmax: ", sp_map.shape)
+        sp_map = sp_map.view(bsize, h * w, h * w)
+        print("sp_map view: ", sp_map.shape)
         sp_map = torch.matmul(sp_map, x_bottom)
-        sp_map = sp_map.reshape(bsize, self.in_channels, h, w)
-        x = x + sp_map
-        x = self.out_conv(x)
+        print("sp_map matmul: ", sp_map.shape)
+        sp_map = torch.reshape(sp_map, (bsize, self.in_channels, h, w))
+        print("sp_map reshape: ", sp_map.shape)
+        x = torch.add(x, sp_map)
+        print("x add: ", x.shape)
+        x = self.conv_out(x)
+        print("x out: ", x.shape)
         return x
 
 
 class MFAB(nn.Module):
     def __init__(
-        self, in_channels, skip_channels, out_channels, reduction=16, *args, **kwargs
+        self, in_channels, mid_channels, out_channels, reduced_channels, *args, **kwargs
     ) -> None:
         super().__init__(*args, **kwargs)
-        self.hl_conv = nn.Sequential(
-            Conv2dReLU(in_channels, in_channels), Conv2dReLU(in_channels, skip_channels)
+        self.block_1 = nn.Sequential(
+            Conv2dReLU(in_channels, in_channels), Conv2dReLU(in_channels, mid_channels)
         )
-        reduced_channels = max(1, skip_channels // reduction)
-        self.SE_ll = nn.Sequential(
+        self.block_2l = nn.Sequential(
             nn.AdaptiveAvgPool2d(output_size=1),
-            nn.Conv2d(skip_channels, reduced_channels, 1),
+            nn.Conv2d(mid_channels, reduced_channels, 1),
             nn.ReLU(inplace=True),
-            nn.Conv2d(reduced_channels, skip_channels, 1),
+            nn.Conv2d(reduced_channels, mid_channels, 1),
             nn.Sigmoid(),
         )
-        self.SE_hl = nn.Sequential(
+        self.block_2r = nn.Sequential(
             nn.AdaptiveAvgPool2d(output_size=1),
-            nn.Conv2d(skip_channels, reduced_channels, 1),
+            nn.Conv2d(mid_channels, reduced_channels, 1),
             nn.ReLU(inplace=True),
-            nn.Conv2d(reduced_channels, skip_channels, 1),
+            nn.Conv2d(reduced_channels, mid_channels, 1),
             nn.Sigmoid(),
         )
-        self.conv1 = Conv2dReLU(skip_channels + skip_channels, out_channels)
+        self.conv1 = Conv2dReLU(2 * mid_channels, out_channels)
         self.conv2 = Conv2dReLU(out_channels, out_channels)
 
     def forward(self, x, skip=None):
-        x = self.hl_conv(x)
-        x = F.interpolate(x, scale_factor=2, mode="nearest")
-        attention_hl = self.SE_hl(x)
+        print("MFAB forward")
+        print("x: ", x.shape)
+        x_1 = self.block_1(x)
+        print("x_1 block_1: ", x_1.shape)
+        x_1 = F.interpolate(x_1, scale_factor=2, mode="nearest")
+        print("x_1 interpolate: ", x_1.shape)
+        x_2l = self.block_2l(x_1)
+        print("x_2l: ", x_2l.shape)
         if skip is not None:
-            attention_ll = self.SE_ll(skip)
-            attention_hl = attention_hl + attention_ll
-            x = x * attention_hl
-            x = torch.cat([x, skip], dim=1)
+            print("skip: ", skip.shape)
+            x_2r = self.block_2r(skip)
+            print("x_2r: ", x_2r.shape)
+            x_2l = torch.add(x_2l, x_2r)
+            print("x_2l+x_2r: ", x_2l.shape)
+        print("before matmul: ", x_1.shape, x_2l.shape)
+        x = x_1 * x_2l
+        print("x matmul: ", x.shape)
+        x = torch.cat([x, skip], dim=1)
+        print("x cat: ", x.shape)
         x = self.conv1(x)
+        print("x conv1: ", x.shape)
         x = self.conv2(x)
+        print("x conv2: ", x.shape)
         return x
 
 
 class DecoderBlock(nn.Module):
-    def __init__(
-        self, in_channels, skip_channels, out_channels, *args, **kwargs
-    ) -> None:
+    def __init__(self, in_channels, out_channels, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
-        self.conv1 = Conv2dReLU(
-            in_channels + skip_channels, out_channels, kernel_size=3
-        )
+        self.conv1 = Conv2dReLU(in_channels, out_channels, kernel_size=3)
         self.conv2 = Conv2dReLU(out_channels, out_channels, kernel_size=3)
 
     def forward(self, x, skip=None):
@@ -96,53 +133,27 @@ class DecoderBlock(nn.Module):
 
 
 class MAnetDecoder(nn.Module):
-    def __init__(
-        self,
-        encoder_channels,
-        decoder_channels,
-        n_blocks=5,
-        reduction=16,
-        pab_channels=64,
-        *args,
-        **kwargs
-    ) -> None:
+    def __init__(self, inputs, mid_channels, outputs, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
-        if n_blocks != len(decoder_channels):
-            raise ValueError(
-                "Model depth is {}, but you provide `decoder_channels` for {} blocks.".format(
-                    n_blocks, len(decoder_channels)
-                )
-            )
 
-        encoder_channels = encoder_channels[1:]
-        encoder_channels = encoder_channels[::-1]
+        # Position Attention Block
+        self.pab_block = PAB(inputs[0], outputs[0])
 
-        head_channels = encoder_channels[0]
-        in_channels = [head_channels] + list(decoder_channels[:-1])
-        skip_channels = list(encoder_channels[1:]) + [0]
-        out_channels = decoder_channels
+        self.mfab_block1 = MFAB(inputs[1], mid_channels[0], outputs[1], 32)
+        self.mfab_block2 = MFAB(inputs[2], mid_channels[1], outputs[2], 32)
+        self.mfab_block3 = MFAB(inputs[3], mid_channels[2], outputs[3], 16)
+        self.mfab_block4 = MFAB(inputs[4], mid_channels[3], outputs[4], 8)
 
-        self.center = PAB(head_channels, head_channels, pab_channels=pab_channels)
-        blocks = [
-            (
-                MFAB(in_ch, skip_ch, out_ch, reduction=reduction)
-                if skip_ch > 0
-                else DecoderBlock(in_ch, skip_ch, out_ch)
-            )
-            for in_ch, skip_ch, out_ch in zip(in_channels, skip_channels, out_channels)
-        ]
-        self.blocks = nn.ModuleList(blocks)
+        self.decoder_block = DecoderBlock(inputs[5], outputs[5])
 
-    def forward(self, *features):
-        features = features[1:]
-        features = features[::-1]
+    def forward(self, x, skips):
+        c1, c2, c3, c4 = skips
 
-        head = features[0]
-        skips = features[1:]
-
-        x = self.center(head)
-        for i, decoder_block in enumerate(self.blocks):
-            skip = skips[i] if i < len(skips) else None
-            x = decoder_block(x, skip)
+        x = self.pab_block(x)
+        x = self.mfab_block1(x, c4)
+        x = self.mfab_block2(x, c3)
+        x = self.mfab_block3(x, c2)
+        x = self.mfab_block4(x, c1)
+        x = self.decoder_block(x)
 
         return x
