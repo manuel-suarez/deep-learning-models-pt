@@ -554,7 +554,20 @@ pspnet_decoder_params = {
     "efficientnetb7": {},
 }
 
-manet_decoder_params = {"vgg11": {}}
+manet_decoder_params = {
+    "vgg11": {
+        "encoder_channels": [512,512,256,128,64,], 
+        "decoder_channels": [64,256,128,64,32]
+    },
+    "vgg13": {
+        "encoder_channels": [512,512,256,128,64,], 
+        "decoder_channels": [64,256,128,64,32]
+    },
+    "vgg16": {
+        "encoder_channels": [512,512,256,128,64,], 
+        "decoder_channels": [64,256,128,64,32]
+    }
+}
 
 
 def get_encoder(name, in_channels=3, wavelets_mode=False, deeplab_arch=False):
