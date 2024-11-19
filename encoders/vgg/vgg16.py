@@ -4,7 +4,9 @@ import torch.nn as nn
 
 
 class Vgg16Encoder(VggBaseEncoder):
-    def __init__(self, in_channels=3, wavelets_mode=False, *args, **kwargs) -> None:
+    def __init__(
+        self, in_channels=3, wavelets_mode=False, deeplab_arch=False, *args, **kwargs
+    ) -> None:
         super().__init__(in_channels, wavelets_mode, *args, **kwargs)
         self.encoder_block1 = EncoderBlock(
             in_channels, 64, pool_block=False, wavelets_mode=wavelets_mode
