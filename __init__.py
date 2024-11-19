@@ -4,6 +4,7 @@ from .unetplusplus import UnetPlusPlus
 from .linknet import Linknet
 from .deeplabv3plus import DeepLabV3Plus
 from .pspnet import PSPNet
+from .manet import MAnet
 
 
 def get_model(arch, args, encoder=None):
@@ -19,4 +20,6 @@ def get_model(arch, args, encoder=None):
         return PSPNet(encoder_name=encoder, **args)
     if arch == "deeplabv3plus":
         return DeepLabV3Plus(encoder_name=encoder, **args)
+    if arch == "manet":
+        return MAnet(encoder_name=encoder, **args)
     raise ValueError(f"No se encontró el modelo {arch}")

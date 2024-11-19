@@ -554,6 +554,8 @@ pspnet_decoder_params = {
     "efficientnetb7": {},
 }
 
+manet_decoder_params = {"vgg11": {}}
+
 
 def get_encoder(name, in_channels=3, wavelets_mode=False, deeplab_arch=False):
     if name not in encoders:
@@ -615,6 +617,12 @@ def get_pspnet_decoder_params(name):
     return pspnet_decoder_params[name]
 
 
+def get_manet_decoder_params(name, wavelets_mode):
+    if name not in manet_decoder_params:
+        raise EncoderException(encoder_name=name)
+    return manet_decoder_params[name]
+
+
 __all__ = [
     get_encoder,
     get_unet_decoder_params,
@@ -623,4 +631,5 @@ __all__ = [
     get_fpn_decoder_params,
     get_deeplabv3plus_decoder_params,
     get_pspnet_decoder_params,
+    get_manet_decoder_params,
 ]

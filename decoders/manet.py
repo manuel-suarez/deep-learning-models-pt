@@ -1,7 +1,6 @@
 import torch, torch.nn as nn
 import torch.nn.functional as F
 
-from decoders.unet import DecoderBlock
 from .common import Conv2dReLU
 
 
