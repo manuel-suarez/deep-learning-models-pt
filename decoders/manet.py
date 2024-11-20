@@ -17,51 +17,51 @@ class PAB(nn.Module):
         self.map_softmax = nn.Softmax(dim=1)
 
     def forward(self, x):
-        print("PAB forward")
-        print("x: ", x.shape, x.size())
+        # print("PAB forward")
+        # print("x: ", x.shape, x.size())
         bsize = x.size()[0]
         h = x.size()[2]
         w = x.size()[3]
 
         # Apply convolutions
         x_top = self.conv_top(x)
-        print("x top: ", x_top.shape)
+        # print("x top: ", x_top.shape)
         x_center = self.conv_center(x)
-        print("x center: ", x_center.shape)
+        # print("x center: ", x_center.shape)
         x_bottom = self.conv_bottom(x)
-        print("x bottom: ", x_bottom.shape)
+        # print("x bottom: ", x_bottom.shape)
 
         # Flatten
         x_top = torch.flatten(x_top, 2)
-        print("x top flatten: ", x_top.shape)
+        # print("x top flatten: ", x_top.shape)
         x_center = torch.flatten(x_center, 2)
-        print("x center flatten: ", x_center.shape)
+        # print("x center flatten: ", x_center.shape)
         x_bottom = torch.flatten(x_bottom, 2)
-        print("x bottom flatten: ", x_bottom.shape)
+        # print("x bottom flatten: ", x_bottom.shape)
 
         # Transpose
         x_center = torch.transpose(x_center, 1, 2)
-        print("x center transpose: ", x_center.shape)
+        # print("x center transpose: ", x_center.shape)
         x_bottom = torch.transpose(x_bottom, 1, 2)
-        print("x bottom transpose: ", x_bottom.shape)
+        # print("x bottom transpose: ", x_bottom.shape)
 
         # Matmul & view & softmax
         sp_map = torch.matmul(x_center, x_top)
-        print("sp_map matmul: ", sp_map.shape)
+        # print("sp_map matmul: ", sp_map.shape)
         sp_map = sp_map.view(bsize, -1)
-        print("sp_map view: ", sp_map.shape)
+        # print("sp_map view: ", sp_map.shape)
         sp_map = self.map_softmax(sp_map)
-        print("sp_map softmax: ", sp_map.shape)
+        # print("sp_map softmax: ", sp_map.shape)
         sp_map = sp_map.view(bsize, h * w, h * w)
-        print("sp_map view: ", sp_map.shape)
+        # print("sp_map view: ", sp_map.shape)
         sp_map = torch.matmul(sp_map, x_bottom)
-        print("sp_map matmul: ", sp_map.shape)
+        # print("sp_map matmul: ", sp_map.shape)
         sp_map = torch.reshape(sp_map, (bsize, self.in_channels, h, w))
-        print("sp_map reshape: ", sp_map.shape)
+        # print("sp_map reshape: ", sp_map.shape)
         x = torch.add(x, sp_map)
-        print("x add: ", x.shape)
+        # print("x add: ", x.shape)
         x = self.conv_out(x)
-        print("x out: ", x.shape)
+        # print("x out: ", x.shape)
         return x
 
 
@@ -91,29 +91,29 @@ class MFAB(nn.Module):
         self.conv2 = Conv2dReLU(out_channels, out_channels)
 
     def forward(self, x, skip=None):
-        print("MFAB forward")
-        print("x: ", x.shape)
+        # print("MFAB forward")
+        # print("x: ", x.shape)
         x_1 = self.block_1(x)
-        print("x_1 block_1: ", x_1.shape)
+        # print("x_1 block_1: ", x_1.shape)
         x_1 = F.interpolate(x_1, scale_factor=2, mode="nearest")
-        print("x_1 interpolate: ", x_1.shape)
+        # print("x_1 interpolate: ", x_1.shape)
         x_2l = self.block_2l(x_1)
-        print("x_2l: ", x_2l.shape)
+        # print("x_2l: ", x_2l.shape)
         if skip is not None:
-            print("skip: ", skip.shape)
+            # print("skip: ", skip.shape)
             x_2r = self.block_2r(skip)
-            print("x_2r: ", x_2r.shape)
+            # print("x_2r: ", x_2r.shape)
             x_2l = torch.add(x_2l, x_2r)
-            print("x_2l+x_2r: ", x_2l.shape)
-        print("before matmul: ", x_1.shape, x_2l.shape)
+            # print("x_2l+x_2r: ", x_2l.shape)
+        # print("before matmul: ", x_1.shape, x_2l.shape)
         x = x_1 * x_2l
-        print("x matmul: ", x.shape)
+        # print("x matmul: ", x.shape)
         x = torch.cat([x, skip], dim=1)
-        print("x cat: ", x.shape)
+        # print("x cat: ", x.shape)
         x = self.conv1(x)
-        print("x conv1: ", x.shape)
+        # print("x conv1: ", x.shape)
         x = self.conv2(x)
-        print("x conv2: ", x.shape)
+        # print("x conv2: ", x.shape)
         return x
 
 
