@@ -133,16 +133,26 @@ class DecoderBlock(nn.Module):
 
 
 class MAnetDecoder(nn.Module):
-    def __init__(self, inputs, mid_channels, outputs, *args, **kwargs) -> None:
+    def __init__(
+        self, inputs, mid_channels, reduced_channels, outputs, *args, **kwargs
+    ) -> None:
         super().__init__(*args, **kwargs)
 
         # Position Attention Block
         self.pab_block = PAB(inputs[0], outputs[0])
 
-        self.mfab_block1 = MFAB(inputs[1], mid_channels[0], outputs[1], 32)
-        self.mfab_block2 = MFAB(inputs[2], mid_channels[1], outputs[2], 32)
-        self.mfab_block3 = MFAB(inputs[3], mid_channels[2], outputs[3], 16)
-        self.mfab_block4 = MFAB(inputs[4], mid_channels[3], outputs[4], 8)
+        self.mfab_block1 = MFAB(
+            inputs[1], mid_channels[0], outputs[1], reduced_channels[0]
+        )
+        self.mfab_block2 = MFAB(
+            inputs[2], mid_channels[1], outputs[2], reduced_channels[1]
+        )
+        self.mfab_block3 = MFAB(
+            inputs[3], mid_channels[2], outputs[3], reduced_channels[2]
+        )
+        self.mfab_block4 = MFAB(
+            inputs[4], mid_channels[3], outputs[4], reduced_channels[3]
+        )
 
         self.decoder_block = DecoderBlock(inputs[5], outputs[5])
 
