@@ -133,6 +133,20 @@ class Unet3PDecoder(nn.Module):
         h5_hd4 = self.h5_hd4(c5)
         print("h5_hd4: ", h5_hd4.shape)
         hd4 = torch.cat([h1_hd4, h2_hd4, h3_hd4, h4_hd4, h5_hd4], dim=1)
+        print("hd4: ", hd4.shape)
         hd4 = self.h4_dec(hd4)
+
+        h1_hd3 = self.h1_hd3(c1)
+        print("h1_hd3: ", h1_hd3.shape)
+        h2_hd3 = self.h2_hd3(c2)
+        print("h2_hd3: ", h2_hd3.shape)
+        h3_hd3 = self.h3_hd3(c3)
+        print("h3_hd3: ", h3_hd3.shape)
+        h4_hd3 = self.h4_hd3(c4)
+        print("h4_hd3: ", h4_hd3.shape)
+        h5_hd3 = self.h5_hd3(c5)
+        print("h5_hd3: ", h5_hd3.shape)
+        hd3 = torch.cat([h1_hd3, h2_hd3, h3_hd3, h4_hd3, h5_hd3], dim=1)
+        print("hd3: ", hd3.shape)
 
         return hd4
