@@ -1,6 +1,7 @@
 from .fpn import FPN
 from .unet import Unet
 from .unetplusplus import UnetPlusPlus
+from .unet3p import Unet3P
 from .linknet import Linknet
 from .deeplabv3plus import DeepLabV3Plus
 from .pspnet import PSPNet
@@ -12,6 +13,8 @@ def get_model(arch, args, encoder=None):
         return Unet(encoder_name=encoder, **args)
     if arch == "unetplusplus":
         return UnetPlusPlus(encoder_name=encoder, **args)
+    if arch == "unet3p":
+        return Unet3P(encoder_name=encoder, **args)
     if arch == "linknet":
         return Linknet(encoder_name=encoder, **args)
     if arch == "fpn":
