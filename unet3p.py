@@ -31,5 +31,6 @@ class Unet3P(nn.Module):
     def forward(self, inputs):
         c1, c2, c3, c4, c5 = self.encoder(inputs)
         d1 = self.decoder(c5, [c1, c2, c3, c4])
+        outputs = self.segmentation(d1)
 
-        return d1
+        return outputs
